@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "debug": false,
+  "web": {
+    "host": "0.0.0.0",
+    "port": 6185,
+    "enable_cors": true,
+    "admin_username": "aetherpackbot",
+    "admin_password": "aetherpackbot",
+    "jwt_secret": ""
+  },
+  "logging": {
+    "level": "INFO",
+    "log_dir": "data/logs"
+  },
+  "database": {
+    "url": "sqlite+aiosqlite:///data/storage/aetherpackbot.db"
+  },
+  "platforms": [],
+  "providers": [],
+  "plugins": {
+    "enabled": true,
+    "directory": "data/plugins",
+    "auto_update": false
+  },
+  "agent": {
+    "default_provider": "",
+    "max_tool_steps": 30,
+    "tool_timeout": 60,
+    "wake_prefixes": [
+      "/",
+      "!"
+    ],
+    "wake_words": []
+  },
+  "moderation": {
+    "enabled": false,
+    "rate_limit_enabled": true,
+    "rate_limit_per_minute": 30
+  },
+  "reply": {
+    "add_prefix": false,
+    "prefix_template": "[AetherPackBot] ",
+    "at_sender": false,
+    "quote_original": false
+  },
+  "personas": [],
+  "default_persona": "",
+  "subagents": []
+}
