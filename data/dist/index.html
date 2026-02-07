@@ -1,18 +1,263 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AetherPackBot Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/assets/index-DOewkrcI.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/vendor-BrbMrNWY.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-XSpYJCfS.css">
-  </head>
-  <body class="bg-gray-50 dark:bg-gray-950">
-    <div id="app"></div>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AetherPackBot</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .msg-row{margin-bottom:16px;display:flex;flex-direction:column}
+        .msg-meta{font-size:12px;color:#94a3b8;margin-bottom:4px;display:flex;justify-content:space-between}
+        .msg-bubble{padding:12px 16px;border-radius:12px;max-width:85%;line-height:1.5;word-wrap:break-word}
+        .msg-user{align-items:flex-end}.msg-user .msg-bubble{background:#3b82f6;color:white;border-bottom-right-radius:2px}
+        .msg-assistant{align-items:flex-start}.msg-assistant .msg-bubble{background:#f1f5f9;color:#1e293b;border-bottom-left-radius:2px}
+        .stat-card{text-align:center;padding:20px}
+        .stat-card .stat-value{font-size:2rem;font-weight:700;color:var(--primary)}
+        .stat-card .stat-label{font-size:.85rem;color:#6b7280;margin-top:4px}
+        .persona-card{border-left:4px solid var(--primary)}
+        .persona-card.active{border-left-color:#10b981;background:#f0fdf4}
+        .tab-bar{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px}
+        .tab-bar button{padding:8px 20px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:#6b7280;font-size:14px}
+        .tab-bar button.active{border-bottom-color:var(--primary);color:var(--primary);font-weight:600}
+        .tab-bar button:hover{color:var(--primary)}
+        .empty-state{text-align:center;padding:60px 20px;color:#9ca3af}
+        .empty-state .icon{font-size:48px;margin-bottom:12px}
+        .settings-panel.hidden{display:none}
+    </style>
+</head>
+<body>
+<div id="login-screen">
+    <div class="card" style="width:380px;text-align:center;border:none;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);">
+        <div style="font-size:48px;margin-bottom:10px;">🔷</div>
+        <h2 class="mb-4">AetherPackBot</h2>
+        <p class="text-gray mb-4">多平台 LLM 机器人框架</p>
+        <div style="text-align:left;">
+            <label>用户名</label>
+            <input type="text" id="username" class="input" value="aetherpackbot">
+            <label>密码</label>
+            <input type="password" id="password" class="input" onkeydown="if(event.key==='Enter')app.login()">
+        </div>
+        <button onclick="app.login()" class="btn btn-primary" style="width:100%;justify-content:center;padding:10px;">登录控制台</button>
+        <p id="login-error" class="text-sm mt-4" style="color:var(--danger)"></p>
+    </div>
+</div>
+
+<div id="app-layout" class="hidden" style="width:100%;display:flex;">
+    <div class="sidebar">
+        <div class="brand"><span>🔷 AetherPackBot</span></div>
+        <nav style="flex:1;">
+            <a class="nav-item" onclick="app.nav('home')">📊 仪表盘</a>
+            <a class="nav-item" onclick="app.nav('platforms')">📱 消息平台</a>
+            <a class="nav-item" onclick="app.nav('providers')">✨ 模型提供商</a>
+            <a class="nav-item" onclick="app.nav('persona')">❤️ 人格管理</a>
+            <a class="nav-item" onclick="app.nav('plugins')">🧩 扩展插件</a>
+            <a class="nav-item" onclick="app.nav('chat')">💬 在线聊天</a>
+            <a class="nav-item" onclick="app.nav('settings')">⚙️ 系统设置</a>
+            <a class="nav-item" onclick="app.nav('logs')">📜 控制台日志</a>
+        </nav>
+        <div style="padding:12px 16px;font-size:12px;color:#6b7280;" id="sidebar-version">v1.0.0</div>
+        <a class="nav-item" onclick="app.logout()" style="color:var(--danger)">🚪 退出登录</a>
+    </div>
+    <main class="main">
+        <!-- Dashboard -->
+        <div id="view-home" class="view">
+            <div class="flex items-center justify-between mb-4"><h1>📊 仪表盘</h1><span class="badge badge-success">系统正常</span></div>
+            <div class="grid" style="grid-template-columns:repeat(4,1fr);">
+                <div class="card stat-card"><div class="stat-value" id="stat-platforms">-</div><div class="stat-label">消息平台</div></div>
+                <div class="card stat-card"><div class="stat-value" id="stat-providers">-</div><div class="stat-label">模型提供商</div></div>
+                <div class="card stat-card"><div class="stat-value" id="stat-plugins">-</div><div class="stat-label">扩展插件</div></div>
+                <div class="card stat-card"><div class="stat-value" id="stat-uptime">-</div><div class="stat-label">运行时间</div></div>
+            </div>
+            <div class="grid mt-4" style="grid-template-columns:1fr 1fr;">
+                <div class="card">
+                    <h3>💻 系统资源</h3>
+                    <div class="mt-4">
+                        <div class="flex justify-between text-sm mb-2"><span>CPU</span><span id="stat-cpu">-</span></div>
+                        <div style="background:#e5e7eb;border-radius:4px;height:8px;overflow:hidden"><div id="stat-cpu-bar" style="background:var(--primary);height:100%;width:0%;transition:width .3s"></div></div>
+                        <div class="flex justify-between text-sm mb-2 mt-4"><span>内存</span><span id="stat-mem">-</span></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🚀 快速操作</h3>
+                    <div class="mt-4 flex gap-2" style="flex-wrap:wrap">
+                        <button onclick="app.nav('chat')" class="btn btn-primary">💬 聊天</button>
+                        <button onclick="app.nav('providers')" class="btn btn-secondary">✨ 添加模型</button>
+                        <button onclick="app.nav('platforms')" class="btn btn-secondary">📱 添加平台</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Platforms -->
+        <div id="view-platforms" class="view hidden">
+            <div class="flex items-center justify-between mb-4"><h1>📱 消息平台</h1><button onclick="app.modals.openPlatform()" class="btn btn-primary">+ 添加平台</button></div>
+            <div id="platforms-list" class="grid"></div>
+        </div>
+
+        <!-- Providers -->
+        <div id="view-providers" class="view hidden">
+            <div class="flex items-center justify-between mb-4"><h1>✨ 模型提供商</h1><button onclick="app.modals.openProvider()" class="btn btn-primary">+ 添加提供商</button></div>
+            <div id="providers-list" class="grid"></div>
+        </div>
+
+        <!-- Persona -->
+        <div id="view-persona" class="view hidden">
+            <div class="flex items-center justify-between mb-4"><h1>❤️ 人格管理</h1><button onclick="app.modals.openPersona()" class="btn btn-primary">+ 新建人格</button></div>
+            <div id="persona-list" class="grid" style="grid-template-columns:1fr;"></div>
+        </div>
+
+        <!-- Plugins -->
+        <div id="view-plugins" class="view hidden">
+            <div class="flex items-center justify-between mb-4"><h1>🧩 扩展插件</h1></div>
+            <div id="plugins-list" class="grid"></div>
+        </div>
+
+        <!-- Chat -->
+        <div id="view-chat" class="view hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h1>💬 在线聊天</h1>
+                <div class="flex gap-2">
+                    <select id="chat-provider-select" class="input" style="width:200px;margin-bottom:0"></select>
+                    <button onclick="app.fetchChat()" class="btn btn-secondary">刷新</button>
+                </div>
+            </div>
+            <div class="card" style="height:calc(100vh - 150px);display:flex;flex-direction:column;">
+                <div id="chat-messages" style="flex:1;overflow-y:auto;padding-right:10px;margin-bottom:12px;"></div>
+                <div style="border-top:1px solid var(--border);padding-top:12px;display:flex;gap:8px;">
+                    <textarea id="chat-input" class="input" style="margin-bottom:0;resize:none;height:50px;" placeholder="输入消息... (Ctrl+Enter 发送)" onkeydown="if(event.ctrlKey&&event.key==='Enter')app.sendChat()"></textarea>
+                    <button class="btn btn-primary" onclick="app.sendChat()" style="height:50px;">发送</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div id="view-settings" class="view hidden">
+            <h1>⚙️ 系统设置</h1>
+            <div class="tab-bar">
+                <button class="active" onclick="app.settingsTab('general',this)">基本设置</button>
+                <button onclick="app.settingsTab('web',this)">Web 服务</button>
+                <button onclick="app.settingsTab('reply',this)">回复设置</button>
+                <button onclick="app.settingsTab('account',this)">账号管理</button>
+            </div>
+            <div id="settings-general" class="settings-panel">
+                <div class="card"><h3>🤖 基本配置</h3>
+                    <form onsubmit="event.preventDefault();app.actions.saveSettings()">
+                        <label>机器人昵称</label><input id="conf-agent-name" class="input" placeholder="AetherPackBot">
+                        <label>唤醒前缀 (逗号分隔)</label><input id="conf-wake-prefixes" class="input" placeholder="/, !">
+                        <label>默认提供商 ID</label><input id="conf-default-provider" class="input" placeholder="openai_0">
+                        <div class="flex justify-end mt-4"><button type="submit" class="btn btn-primary">保存</button></div>
+                    </form>
+                </div>
+            </div>
+            <div id="settings-web" class="settings-panel hidden">
+                <div class="card"><h3>🌐 Web 服务</h3>
+                    <form onsubmit="event.preventDefault();app.actions.saveWebSettings()">
+                        <label>监听地址</label><input id="conf-web-host" class="input" value="0.0.0.0">
+                        <label>端口</label><input id="conf-web-port" class="input" type="number" value="6185">
+                        <div class="flex justify-end mt-4"><button type="submit" class="btn btn-primary">保存 (重启生效)</button></div>
+                    </form>
+                </div>
+            </div>
+            <div id="settings-reply" class="settings-panel hidden">
+                <div class="card"><h3>💬 回复行为</h3>
+                    <form onsubmit="event.preventDefault();app.actions.saveReplySettings()">
+                        <label class="flex items-center gap-2"><input type="checkbox" id="conf-reply-at"> 回复时 @发送者</label>
+                        <label class="flex items-center gap-2 mt-2"><input type="checkbox" id="conf-reply-quote"> 引用原消息</label>
+                        <label class="flex items-center gap-2 mt-2"><input type="checkbox" id="conf-reply-prefix"> 添加前缀</label>
+                        <label class="mt-2">前缀模板</label><input id="conf-reply-prefix-tpl" class="input" placeholder="{bot_name}: ">
+                        <div class="flex justify-end mt-4"><button type="submit" class="btn btn-primary">保存</button></div>
+                    </form>
+                </div>
+            </div>
+            <div id="settings-account" class="settings-panel hidden">
+                <div class="card"><h3>🔑 修改管理员密码</h3>
+                    <form onsubmit="event.preventDefault();app.actions.changePassword()">
+                        <label>新用户名</label><input id="conf-new-username" class="input" placeholder="留空不修改">
+                        <label>新密码</label><input id="conf-new-password" type="password" class="input">
+                        <label>确认新密码</label><input id="conf-new-password2" type="password" class="input">
+                        <div class="flex justify-end mt-4"><button type="submit" class="btn btn-primary">修改</button></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logs -->
+        <div id="view-logs" class="view hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h1>📜 控制台日志</h1>
+                <div class="flex gap-2">
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="auto-scroll-logs" checked> 自动滚动</label>
+                    <button onclick="app.fetchLogs()" class="btn btn-secondary">刷新</button>
+                </div>
+            </div>
+            <div id="logs-container" class="card" style="background:#1e1e1e;color:#d4d4d4;font-family:'Consolas',monospace;height:calc(100vh - 150px);overflow-y:auto;padding:15px;font-size:13px;white-space:pre-wrap;"></div>
+        </div>
+    </main>
+</div>
+
+<div id="notify-area"></div>
+
+<!-- Provider Modal -->
+<div id="modal-provider" class="modal-overlay"><div class="modal">
+    <div class="flex justify-between items-center mb-4"><h2 id="modal-provider-title">添加提供商</h2><button onclick="app.modals.close()" class="btn-ghost">✕</button></div>
+    <form onsubmit="event.preventDefault();app.actions.saveProvider()">
+        <label>提供商类型</label>
+        <select id="prov-type" class="input" onchange="app.render.onProvTypeChange()">
+            <option value="openai">OpenAI</option><option value="anthropic">Anthropic Claude</option>
+            <option value="deepseek">DeepSeek</option><option value="gemini">Google Gemini</option>
+            <option value="ollama">Ollama (本地)</option><option value="groq">Groq</option>
+            <option value="moonshot">Moonshot (Kimi)</option><option value="siliconflow">硅基流动</option>
+            <option value="zhipu">智谱 AI</option><option value="mistral">Mistral AI</option>
+            <option value="xai">xAI (Grok)</option><option value="lm_studio">LM Studio</option>
+            <option value="openai_compatible">OpenAI 兼容接口</option>
+        </select>
+        <label>显示名称</label><input id="prov-name" class="input" placeholder="例如：GPT-4o 主力">
+        <div id="field-prov-key"><label>API Key</label><input id="prov-key" type="password" class="input" placeholder="sk-..."></div>
+        <label>API 基础 URL <span class="text-sm text-gray">(可选)</span></label><input id="prov-base-url" class="input" placeholder="留空使用默认">
+        <label>模型</label><input id="prov-model" class="input" placeholder="自动填充默认模型">
+        <p id="prov-models-hint" class="text-sm text-gray mt-1"></p>
+        <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="app.modals.close()" class="btn btn-secondary">取消</button><button type="submit" class="btn btn-primary">保存</button></div>
+    </form>
+</div></div>
+
+<!-- Platform Modal -->
+<div id="modal-platform" class="modal-overlay"><div class="modal">
+    <div class="flex justify-between items-center mb-4"><h2 id="modal-platform-title">添加平台</h2><button onclick="app.modals.close()" class="btn-ghost">✕</button></div>
+    <form onsubmit="event.preventDefault();app.actions.savePlatform()">
+        <label>平台类型</label>
+        <select id="plat-type" class="input" onchange="app.render.onPlatTypeChange()">
+            <option value="telegram">Telegram</option><option value="discord">Discord</option>
+            <option value="qq_onebot">QQ (OneBot v11)</option>
+            <option value="slack">Slack</option><option value="dingtalk">钉钉 (DingTalk)</option>
+            <option value="lark">飞书 (Lark)</option>
+        </select>
+        <label>配置名称 / ID</label><input id="plat-name" class="input" placeholder="留空自动生成">
+        <div id="field-plat-token"><label>Token / 凭证</label><input id="plat-token" class="input" placeholder="Bot Token"></div>
+        <div id="field-plat-url"><label>API 地址 (可选)</label><input id="plat-url" class="input" placeholder="ws://..."></div>
+        <div id="field-onebot-opts" class="hidden mb-4 p-4 rounded" style="background:#f8fafc;border:1px solid #e2e8f0;">
+            <h4 class="mb-2">OneBot 反向 WS 配置</h4>
+            <label>反向 Websocket 主机</label><input id="plat-ws-host" class="input" value="0.0.0.0" placeholder="0.0.0.0">
+            <p class="text-xs text-gray mb-2">AetherPackBot 将作为服务器端。</p>
+            <label>反向 Websocket 端口</label><input id="plat-ws-port" class="input" type="number" value="8081" placeholder="8081">
+            <label>反向 Websocket Token</label><input id="plat-ws-token" class="input" placeholder="未设置则不启用 Token 验证">
+            <p class="text-xs text-gray mt-1">NAPCat / LLOneBot / Lagrange 反向 WS 连至: ws://此IP:此端口/ws</p>
+        </div>
+        <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="app.modals.close()" class="btn btn-secondary">取消</button><button type="submit" class="btn btn-primary">保存</button></div>
+    </form>
+</div></div>
+
+<!-- Persona Modal -->
+<div id="modal-persona" class="modal-overlay"><div class="modal">
+    <div class="flex justify-between items-center mb-4"><h2 id="modal-persona-title">新建人格</h2><button onclick="app.modals.close()" class="btn-ghost">✕</button></div>
+    <form onsubmit="event.preventDefault();app.actions.savePersona()">
+        <label>人格名称</label><input id="persona-name" class="input" placeholder="例如：猫娘、助手">
+        <label>描述</label><input id="persona-desc" class="input" placeholder="简短描述">
+        <label>系统提示词 (System Prompt)</label>
+        <textarea id="persona-prompt" class="input" style="height:200px;font-family:monospace;" placeholder="You are a helpful assistant..."></textarea>
+        <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="app.modals.close()" class="btn btn-secondary">取消</button><button type="submit" class="btn btn-primary">保存</button></div>
+    </form>
+</div></div>
+
+<script src="js/app.js"></script>
+</body>
 </html>

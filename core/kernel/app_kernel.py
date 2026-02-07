@@ -1,4 +1,4 @@
-"""
+﻿"""
 Application Kernel - Central orchestrator of the application.
 
 The kernel is responsible for:
@@ -16,9 +16,9 @@ import signal
 from pathlib import Path
 from typing import Any
 
-from aetherpackbot.kernel.container import ServiceContainer
-from aetherpackbot.kernel.lifecycle import LifecycleManager, LifecycleState
-from aetherpackbot.kernel.logging import LogManager, get_logger
+from core.kernel.container import ServiceContainer
+from core.kernel.lifecycle import LifecycleManager, LifecycleState
+from core.kernel.logging import LogManager, LogBroker, get_logger, setup_logging
 
 
 class ApplicationKernel:
@@ -56,6 +56,9 @@ class ApplicationKernel:
         # Core systems
         self._container = ServiceContainer()
         self._lifecycle = LifecycleManager()
+        
+        # 初始化日志系统（参考 AstrBot: 主入口初始化 logger + LogBroker）
+        self._root_logger, self._log_broker = setup_logging()
         self._logger = get_logger("kernel")
         
         # Application state
@@ -69,7 +72,8 @@ class ApplicationKernel:
         """Register core services in the dependency container."""
         self._container.register_instance(ServiceContainer, self._container)
         self._container.register_instance(LifecycleManager, self._lifecycle)
-        self._container.register_singleton(LogManager)
+        # 注册 LogBroker 供 Dashboard SSE 日志推送使用
+        self._container.register_instance(LogBroker, self._log_broker)
     
     async def boot(self) -> None:
         """
@@ -107,18 +111,24 @@ class ApplicationKernel:
     
     async def _initialize_directories(self) -> None:
         """Create required data directories."""
-        from aetherpackbot.kernel.paths import ensure_directories
+        from core.kernel.paths import ensure_directories
         ensure_directories()
         self._logger.debug("Data directories initialized")
     
     async def _load_configuration(self) -> None:
         """Load application configuration."""
-        from aetherpackbot.storage.config import ConfigurationManager
+        from core.storage.config import ConfigurationManager
         
         config_manager = ConfigurationManager(self._config_path)
         await config_manager.load()
         
         self._container.register_instance(ConfigurationManager, config_manager)
+        
+        # 根据配置设置日志级别和文件日志（参考 AstrBot: LogManager.configure_logger）
+        logging_settings = config_manager.get_section("logging")
+        if logging_settings:
+            LogManager.configure_from_settings(self._root_logger, logging_settings)
+        
         self._logger.debug("Configuration loaded")
     
     async def _register_services(self) -> None:
@@ -126,52 +136,63 @@ class ApplicationKernel:
         # Import and register all service modules
         
         # Storage layer
-        from aetherpackbot.storage.database import DatabaseManager
+        from core.storage.database import DatabaseManager
         db_manager = DatabaseManager()
         await db_manager.initialize()
         self._container.register_instance(DatabaseManager, db_manager)
         self._lifecycle.register(db_manager, priority=100)
         
         # Event system
-        from aetherpackbot.messaging.events import EventDispatcher
+        from core.messaging.events import EventDispatcher
         event_dispatcher = EventDispatcher()
         self._container.register_instance(EventDispatcher, event_dispatcher)
         self._lifecycle.register(event_dispatcher, priority=90)
         
         # Provider manager
-        from aetherpackbot.providers.manager import ProviderManager
+        from core.provider.manager import ProviderManager
         provider_manager = ProviderManager(self._container)
         await provider_manager.initialize()
         self._container.register_instance(ProviderManager, provider_manager)
         self._lifecycle.register(provider_manager, priority=80)
         
         # Platform manager
-        from aetherpackbot.platforms.manager import PlatformManager
+        from core.platform.manager import PlatformManager
         platform_manager = PlatformManager(self._container, event_dispatcher)
         self._container.register_instance(PlatformManager, platform_manager)
         self._lifecycle.register(platform_manager, priority=70)
         
         # Plugin system
-        from aetherpackbot.plugins.manager import PluginManager
+        from core.plugin.manager import PluginManager
         plugin_manager = PluginManager(self._container)
         await plugin_manager.scan_and_load()
         self._container.register_instance(PluginManager, plugin_manager)
         self._lifecycle.register(plugin_manager, priority=60)
         
         # Agent system
-        from aetherpackbot.agents.orchestrator import AgentOrchestrator
+        from core.agent.orchestrator import AgentOrchestrator
         agent_orchestrator = AgentOrchestrator(self._container)
         self._container.register_instance(AgentOrchestrator, agent_orchestrator)
         self._lifecycle.register(agent_orchestrator, priority=50)
         
         # Message processor (pipeline)
-        from aetherpackbot.messaging.processor import MessageProcessor
+        from core.messaging.processor import MessageProcessor
         message_processor = MessageProcessor(self._container)
         self._container.register_instance(MessageProcessor, message_processor)
         self._lifecycle.register(message_processor, priority=40)
         
+        # ── 关键：将 MessageProcessor 注册为 EventDispatcher 的消息处理器 ──
+        # 参考 AstrBot: EventBus.dispatch() 从队列取事件后交给 Pipeline 处理
+        # 没有这一步，平台消息进入 EventDispatcher 后无人消费
+        from core.api.events import EventType
+        event_dispatcher.register(
+            handler=message_processor.process,
+            event_types=EventType.MESSAGE_RECEIVED,
+            priority=100,
+            name="message_pipeline",
+        )
+        
         # Web API server
-        from aetherpackbot.webapi.server import WebServer
+        from core.webapi.server import WebServer
         web_server = WebServer(self._container, self._webui_dir)
         self._container.register_instance(WebServer, web_server)
         self._lifecycle.register(web_server, priority=30)

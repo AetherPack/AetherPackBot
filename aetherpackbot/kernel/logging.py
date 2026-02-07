@@ -129,7 +129,8 @@ class LogManager:
         LogManager._initialized = True
         self._loggers: dict[str, logging.Logger] = {}
         self._broker = LogBroker()
-        self._log_dir = Path("data/logs")
+        from aetherpackbot.kernel.paths import get_log_dir
+        self._log_dir = get_log_dir()
         self._log_level = logging.INFO
         self._setup_root_logger()
     
@@ -143,7 +144,7 @@ class LogManager:
             "%(log_color)s%(asctime)s | %(levelname)-8s | %(name)s%(reset)s | %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
             log_colors={
-                "DEBUG": "cyan",
+                "DEBUG": "green",
                 "INFO": "green",
                 "WARNING": "yellow",
                 "ERROR": "red",

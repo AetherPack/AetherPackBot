@@ -1,4 +1,4 @@
-"""
+﻿"""
 Configuration Manager - Application configuration management.
 
 Provides configuration loading, validation, and persistence with
@@ -13,7 +13,7 @@ from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Any, TypeVar, Generic
 
-from aetherpackbot.kernel.logging import get_logger
+from core.kernel.logging import get_logger
 
 T = TypeVar("T")
 logger = get_logger("config")
@@ -169,7 +169,7 @@ class ConfigurationManager:
         if config_path:
             self._config_path = Path(config_path)
         else:
-            from aetherpackbot.kernel.paths import get_config_file
+            from core.kernel.paths import get_config_file
             self._config_path = get_config_file()
         self._config: dict[str, Any] = {}
         self._loaded = False

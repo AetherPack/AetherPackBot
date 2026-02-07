@@ -16,11 +16,33 @@
   "database": {
     "url": "sqlite+aiosqlite:///data/storage/aetherpackbot.db"
   },
-  "platforms": [],
-  "providers": [],
+  "platforms": [
+    {
+      "type": "qq_onebot",
+      "name": "qq_onebot",
+      "config": {
+        "host": "0.0.0.0",
+        "port": 5432
+      },
+      "id": "qq1",
+      "host": "0.0.0.0",
+      "port": 5432
+    }
+  ],
+  "providers": [
+    {
+      "type": "openai",
+      "name": "111",
+      "api_key": "sk-yOsA3RVsiHr4W7HaucXP94lSflqzeRl8DhZsHTfWCgOa1pEq",
+      "api_base_url": "http://www.nantongzhuanyong.cn:3000/v1",
+      "model": "glm-4.7",
+      "id": "openai_0"
+    }
+  ],
   "plugins": {
     "enabled": true,
     "directory": "data/plugins",
+    "plugin_data_dir": "data/plugin_data",
     "auto_update": false
   },
   "agent": {
@@ -31,7 +53,8 @@
       "/",
       "!"
     ],
-    "wake_words": []
+    "wake_words": [],
+    "name": ""
   },
   "moderation": {
     "enabled": false,

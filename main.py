@@ -6,11 +6,118 @@ Main entry point for the application.
 
 import argparse
 import asyncio
+import subprocess
 import sys
 from pathlib import Path
 
 # Ensure project root is in path
-sys.path.insert(0, str(Path(__file__).parent))
+PROJECT_ROOT = Path(__file__).parent
+sys.path.insert(0, str(PROJECT_ROOT))
+
+
+def install_dependencies() -> None:
+    """
+    Smart dependency installer:
+    - First run: install all from requirements.txt, then record installed set
+    - Subsequent runs: only check for missing packages and install them
+    """
+    requirements_file = PROJECT_ROOT / "requirements.txt"
+    marker_file = PROJECT_ROOT / "data" / ".deps_installed"
+
+    if not requirements_file.exists():
+        return
+
+    def _parse_requirements() -> list[str]:
+        """Parse package names from requirements.txt (ignore comments/blanks)."""
+        pkgs = []
+        for line in requirements_file.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or line.startswith("-"):
+                continue
+            # Extract bare package name: "aiohttp>=3.11.0" -> "aiohttp"
+            import re
+            name = re.split(r"[>=<!\[;]", line)[0].strip().lower()
+            if name:
+                pkgs.append(name)
+        return pkgs
+
+    def _get_installed() -> set[str]:
+        """Get set of currently installed package names."""
+        try:
+            result = subprocess.run(
+                [sys.executable, "-m", "pip", "list", "--format=columns",
+                 "--disable-pip-version-check"],
+                capture_output=True, text=True, timeout=30,
+            )
+            installed = set()
+            for line in result.stdout.splitlines()[2:]:  # skip header lines
+                parts = line.split()
+                if parts:
+                    installed.add(parts[0].lower())
+            return installed
+        except Exception:
+            return set()
+
+    def _install(packages: list[str]) -> None:
+        """Install a list of packages via pip."""
+        result = subprocess.run(
+            [sys.executable, "-m", "pip", "install",
+             "--quiet", "--disable-pip-version-check"] + packages,
+            capture_output=True, text=True,
+        )
+        if result.returncode != 0:
+            err_msg = (result.stderr or result.stdout or "").strip()
+            for line in err_msg.splitlines()[-8:]:
+                print(f"    {line}")
+            print("  [deps] Some packages failed to install, continuing...")
+
+    required = _parse_requirements()
+    if not required:
+        return
+
+    # --- First run: full install from requirements.txt ---
+    if not marker_file.exists():
+        print("  [deps] First run - installing all dependencies...")
+        result = subprocess.run(
+            [sys.executable, "-m", "pip", "install",
+             "-r", str(requirements_file),
+             "--quiet", "--disable-pip-version-check"],
+            capture_output=True, text=True,
+        )
+        if result.returncode == 0:
+            print("  [deps] All dependencies installed OK")
+        else:
+            err_msg = (result.stderr or result.stdout or "").strip()
+            for line in err_msg.splitlines()[-8:]:
+                print(f"    {line}")
+            print("  [deps] Some dependencies failed, continuing...")
+
+        # Write marker
+        marker_file.parent.mkdir(parents=True, exist_ok=True)
+        marker_file.write_text(
+            "\n".join(required), encoding="utf-8"
+        )
+        return
+
+    # --- Subsequent runs: only install missing packages ---
+    installed = _get_installed()
+    # Normalize: pip uses hyphens, requirements may use underscores
+    normalize = lambda s: s.replace("_", "-").lower()
+    installed_norm = {normalize(p) for p in installed}
+
+    missing = [pkg for pkg in required if normalize(pkg) not in installed_norm]
+
+    if not missing:
+        print("  [deps] All dependencies OK")
+        return
+
+    print(f"  [deps] Installing {len(missing)} missing: {', '.join(missing)}")
+    _install(missing)
+
+    # Update marker
+    marker_file.write_text(
+        "\n".join(required), encoding="utf-8"
+    )
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -68,8 +175,8 @@ def display_banner() -> None:
 
 async def main() -> None:
     """Main application entry point."""
-    from aetherpackbot.kernel import ApplicationKernel
-    from aetherpackbot.kernel.logging import LogManager
+    from core.kernel import ApplicationKernel
+    from core.kernel.logging import LogManager
     
     args = parse_arguments()
     check_environment()
@@ -77,7 +184,7 @@ async def main() -> None:
     
     # Initialize logging
     log_manager = LogManager()
-    logger = log_manager.get_logger("main")
+    logger = log_manager.GetLogger("main")
     
     logger.info("Initializing AetherPackBot...")
     
@@ -107,4 +214,5 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
+    install_dependencies()
     asyncio.run(main())
