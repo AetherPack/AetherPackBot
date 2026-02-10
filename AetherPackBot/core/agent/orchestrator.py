@@ -12,19 +12,19 @@ from __future__ import annotations
 import json
 from typing import Any, TYPE_CHECKING
 
-from aetherpackbot.core.api.agents import (
+from AetherPackBot.core.api.agents import (
     Tool,
     ToolParameter,
     AgentConfig,
     AgentContext,
 )
-from aetherpackbot.core.api.events import MessageEvent
-from aetherpackbot.core.api.messages import MessageChain, TextComponent
-from aetherpackbot.core.agent.runner import ToolLoopRunner
-from aetherpackbot.core.kernel.logging import get_logger
+from AetherPackBot.core.api.events import MessageEvent
+from AetherPackBot.core.api.messages import MessageChain, TextComponent
+from AetherPackBot.core.agent.runner import ToolLoopRunner
+from AetherPackBot.core.kernel.logging import get_logger
 
 if TYPE_CHECKING:
-    from aetherpackbot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.kernel.container import ServiceContainer
 
 logger = get_logger("agents")
 
@@ -48,7 +48,7 @@ class AgentOrchestrator:
     
     async def start(self) -> None:
         """Initialize the orchestrator."""
-        from aetherpackbot.core.storage.config import ConfigurationManager
+        from AetherPackBot.core.storage.config import ConfigurationManager
         
         config_manager = await self._container.resolve(ConfigurationManager)
         
@@ -82,7 +82,7 @@ class AgentOrchestrator:
     
     async def _collect_tools(self) -> None:
         """Collect tools from all sources."""
-        from aetherpackbot.core.plugin.manager import PluginManager
+        from AetherPackBot.core.plugin.manager import PluginManager
         
         self._tools.clear()
         
@@ -176,8 +176,8 @@ class AgentOrchestrator:
         if not event.message:
             return None
         
-        from aetherpackbot.core.provider.manager import ProviderManager
-        from aetherpackbot.core.storage.database import DatabaseManager
+        from AetherPackBot.core.provider.manager import ProviderManager
+        from AetherPackBot.core.storage.database import DatabaseManager
         
         try:
             provider_manager = await self._container.resolve(ProviderManager)
@@ -275,7 +275,7 @@ class AgentOrchestrator:
         if not event.message:
             return
         
-        from aetherpackbot.core.provider.manager import ProviderManager
+        from AetherPackBot.core.provider.manager import ProviderManager
         
         try:
             provider_manager = await self._container.resolve(ProviderManager)

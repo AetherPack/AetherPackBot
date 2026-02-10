@@ -12,11 +12,11 @@ import re
 from typing import TYPE_CHECKING, Any
 from urllib.parse import quote_plus
 
-from aetherpackbot.core.api.plugins import Plugin, PluginMetadata, PluginStatus
-from aetherpackbot.core.api.agents import Tool, ToolParameter, ToolResult
+from AetherPackBot.core.api.plugins import Plugin, PluginMetadata, PluginStatus
+from AetherPackBot.core.api.agents import Tool, ToolParameter, ToolResult
 
 if TYPE_CHECKING:
-    from aetherpackbot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.kernel.container import ServiceContainer
 
 
 class WebSearchExtension(Plugin):
@@ -62,7 +62,7 @@ class WebSearchExtension(Plugin):
         self._status = PluginStatus.LOADED
         
         try:
-            from aetherpackbot.core.storage.config import ConfigurationManager
+            from AetherPackBot.core.storage.config import ConfigurationManager
             config = await container.resolve(ConfigurationManager)
             
             search_config = config.get("search", {})

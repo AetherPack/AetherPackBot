@@ -9,33 +9,33 @@ from __future__ import annotations
 import asyncio
 from typing import Any, TYPE_CHECKING
 
-from aetherpackbot.core.api.platforms import (
+from AetherPackBot.core.api.platforms import (
     BasePlatformAdapter,
     PlatformConfig,
     PlatformStatus,
     PlatformCapabilities,
     PlatformInfo,
 )
-from aetherpackbot.core.api.events import EventType, MessageEvent
-from aetherpackbot.core.api.messages import (
+from AetherPackBot.core.api.events import EventType, MessageEvent
+from AetherPackBot.core.api.messages import (
     Message,
     MessageChain,
     MessageSession,
     PlatformMetadata,
     TextComponent,
 )
-from aetherpackbot.core.kernel.logging import get_logger
+from AetherPackBot.core.kernel.logging import get_logger
 
 if TYPE_CHECKING:
-    from aetherpackbot.core.kernel.container import ServiceContainer
-    from aetherpackbot.core.messaging.events import EventDispatcher
+    from AetherPackBot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.messaging.events import EventDispatcher
 
 logger = get_logger("platforms")
 
 
 # Graceful import: if aiocqhttp is missing, QQOneBotAdapter will be None
 try:
-    from aetherpackbot.core.platform.qq_onebot import QQOneBotAdapter
+    from AetherPackBot.core.platform.qq_onebot import QQOneBotAdapter
 except ImportError:
     QQOneBotAdapter = None  # type: ignore
     logger.warning("aiocqhttp not installed – QQ OneBot adapter disabled. Run: pip install aiocqhttp")
@@ -76,7 +76,7 @@ class PlatformManager:
         self._adapter_tasks: dict[str, asyncio.Task] = {}
 
     async def start(self) -> None:
-        from aetherpackbot.core.storage.config import ConfigurationManager
+        from AetherPackBot.core.storage.config import ConfigurationManager
 
         cm = await self._container.resolve(ConfigurationManager)
         platforms_config = cm.get("platforms", [])

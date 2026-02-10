@@ -8,9 +8,9 @@ The kernel is the central orchestrator of the application, responsible for:
 - Event dispatching and routing
 """
 
-from aetherpackbot.core.kernel.app_kernel import ApplicationKernel
-from aetherpackbot.core.kernel.container import ServiceContainer
-from aetherpackbot.core.kernel.lifecycle import LifecycleManager, LifecycleState
+from AetherPackBot.core.kernel.app_kernel import ApplicationKernel
+from AetherPackBot.core.kernel.container import ServiceContainer
+from AetherPackBot.core.kernel.lifecycle import LifecycleManager, LifecycleState
 
 __all__ = [
     "ApplicationKernel",

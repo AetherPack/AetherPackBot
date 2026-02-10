@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from aetherpackbot.core.kernel.logging import get_logger
+from AetherPackBot.core.kernel.logging import get_logger
 
 logger = get_logger("cli")
 
@@ -109,7 +109,7 @@ def run_cli() -> int:
 
 async def cmd_run(args) -> int:
     """Run the bot."""
-    from aetherpackbot.core.kernel.app_kernel import ApplicationKernel
+    from AetherPackBot.core.kernel.app_kernel import ApplicationKernel
     
     kernel = ApplicationKernel(
         config_path=args.config,
@@ -147,8 +147,8 @@ async def cmd_plugin(args) -> int:
 
 async def plugin_list_cmd() -> int:
     """List installed plugins."""
-    from aetherpackbot.core.plugin.manager import PluginManager
-    from aetherpackbot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.plugin.manager import PluginManager
+    from AetherPackBot.core.kernel.container import ServiceContainer
     
     container = ServiceContainer()
     manager = PluginManager(container)
@@ -268,7 +268,7 @@ async def cmd_config(args) -> int:
 
 async def config_show_cmd() -> int:
     """Show current configuration."""
-    from aetherpackbot.core.storage.config import ConfigurationManager
+    from AetherPackBot.core.storage.config import ConfigurationManager
     import json
     
     manager = ConfigurationManager()
@@ -296,7 +296,7 @@ async def config_show_cmd() -> int:
 
 async def config_set_cmd(key: str, value: str) -> int:
     """Set a configuration value."""
-    from aetherpackbot.core.storage.config import ConfigurationManager
+    from AetherPackBot.core.storage.config import ConfigurationManager
     
     manager = ConfigurationManager()
     await manager.load()

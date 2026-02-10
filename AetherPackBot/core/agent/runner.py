@@ -12,7 +12,7 @@ import json
 from dataclasses import dataclass, field
 from typing import Any, AsyncIterator
 
-from aetherpackbot.core.api.agents import (
+from AetherPackBot.core.api.agents import (
     Tool,
     ToolCall,
     ToolResult,
@@ -20,14 +20,14 @@ from aetherpackbot.core.api.agents import (
     AgentConfig,
     AgentContext,
 )
-from aetherpackbot.core.api.providers import (
+from AetherPackBot.core.api.providers import (
     LLMRequest,
     LLMResponse,
     LLMMessage,
     StreamingChunk,
 )
-from aetherpackbot.core.provider.base import BaseLLMProvider
-from aetherpackbot.core.kernel.logging import get_logger
+from AetherPackBot.core.provider.base import BaseLLMProvider
+from AetherPackBot.core.kernel.logging import get_logger
 
 logger = get_logger("agents")
 

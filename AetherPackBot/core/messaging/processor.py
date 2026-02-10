@@ -19,12 +19,12 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Callable, Awaitable, TYPE_CHECKING
 
-from aetherpackbot.core.api.events import Event, EventType, MessageEvent
-from aetherpackbot.core.api.messages import MessageChain
-from aetherpackbot.core.kernel.logging import get_logger
+from AetherPackBot.core.api.events import Event, EventType, MessageEvent
+from AetherPackBot.core.api.messages import MessageChain
+from AetherPackBot.core.kernel.logging import get_logger
 
 if TYPE_CHECKING:
-    from aetherpackbot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.kernel.container import ServiceContainer
 
 logger = get_logger("processor")
 
@@ -217,7 +217,7 @@ class PluginHandlerStage(PipelineStage):
         return "plugin_handler"
     
     async def process(self, context: PipelineContext) -> PipelineContext:
-        from aetherpackbot.core.plugin.manager import PluginManager
+        from AetherPackBot.core.plugin.manager import PluginManager
         
         try:
             plugin_manager = await self._container.resolve(PluginManager)
@@ -275,7 +275,7 @@ class AgentProcessingStage(PipelineStage):
             logger.debug("唤醒但消息文本为空，跳过 LLM 调用")
             return context
         
-        from aetherpackbot.core.agent.orchestrator import AgentOrchestrator
+        from AetherPackBot.core.agent.orchestrator import AgentOrchestrator
         
         try:
             orchestrator = await self._container.resolve(AgentOrchestrator)
@@ -319,7 +319,7 @@ class ResponseDecorationStage(PipelineStage):
         
         # Add @ mention if configured
         if self._at_sender and context.event.message:
-            from aetherpackbot.core.api.messages import MentionComponent
+            from AetherPackBot.core.api.messages import MentionComponent
             mention = MentionComponent(
                 user_id=context.event.message.sender_id,
                 user_name=context.event.message.sender_name,
@@ -328,7 +328,7 @@ class ResponseDecorationStage(PipelineStage):
         
         # Add prefix if configured
         if self._add_prefix and self._prefix_template:
-            from aetherpackbot.core.api.messages import TextComponent
+            from AetherPackBot.core.api.messages import TextComponent
             prefix = TextComponent(self._prefix_template)
             chain._components.insert(0, prefix)
         
@@ -351,7 +351,7 @@ class ResponseDeliveryStage(PipelineStage):
         if not context.response or not context.event.message:
             return context
         
-        from aetherpackbot.core.platform.manager import PlatformManager
+        from AetherPackBot.core.platform.manager import PlatformManager
         
         try:
             platform_manager = await self._container.resolve(PlatformManager)
@@ -391,7 +391,7 @@ class MessageProcessor:
     
     async def start(self) -> None:
         """Initialize and start the processor."""
-        from aetherpackbot.core.storage.config import ConfigurationManager
+        from AetherPackBot.core.storage.config import ConfigurationManager
         
         config_manager = await self._container.resolve(ConfigurationManager)
         

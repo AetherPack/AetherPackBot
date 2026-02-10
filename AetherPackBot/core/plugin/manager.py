@@ -13,18 +13,18 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, TYPE_CHECKING
 
-from aetherpackbot.core.api.plugins import (
+from AetherPackBot.core.api.plugins import (
     BasePlugin,
     PluginMetadata,
     PluginHandler,
     PluginStatus,
     CommandDefinition,
 )
-from aetherpackbot.core.api.events import Event, EventType, MessageEvent
-from aetherpackbot.core.kernel.logging import get_logger
+from AetherPackBot.core.api.events import Event, EventType, MessageEvent
+from AetherPackBot.core.kernel.logging import get_logger
 
 if TYPE_CHECKING:
-    from aetherpackbot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.kernel.container import ServiceContainer
 
 logger = get_logger("plugins")
 
@@ -128,7 +128,7 @@ class PluginManager:
     ) -> ManagedPlugin | None:
         """Load a single plugin from a file."""
         try:
-            module_name = f"aetherpackbot.core.plugin.loaded.{plugin_path.stem}"
+            module_name = f"AetherPackBot.core.plugin.loaded.{plugin_path.stem}"
             
             # Load the module
             spec = importlib.util.spec_from_file_location(module_name, plugin_path)

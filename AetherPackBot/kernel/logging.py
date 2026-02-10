@@ -129,7 +129,7 @@ class LogManager:
         LogManager._initialized = True
         self._loggers: dict[str, logging.Logger] = {}
         self._broker = LogBroker()
-        from aetherpackbot.kernel.paths import get_log_dir
+        from AetherPackBot.kernel.paths import get_log_dir
         self._log_dir = get_log_dir()
         self._log_level = logging.INFO
         self._setup_root_logger()
@@ -162,7 +162,7 @@ class LogManager:
             datefmt="%Y-%m-%d %H:%M:%S",
         )
         
-        log_file = self._log_dir / "aetherpackbot.log"
+        log_file = self._log_dir / "AetherPackBot.log"
         file_handler = RotatingFileHandler(
             log_file,
             maxBytes=10 * 1024 * 1024,  # 10 MB

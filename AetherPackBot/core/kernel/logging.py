@@ -30,7 +30,7 @@ import colorlog
 
 # ── 版本号 ──────────────────────────────────────────────────────────
 try:
-    from aetherpackbot.core import __version__ as VERSION
+    from AetherPackBot.core import __version__ as VERSION
 except ImportError:
     VERSION = "1.0.0"
 
@@ -264,7 +264,7 @@ class LogManager:
         log_dir = Path(log_dir)
         log_dir.mkdir(parents=True, exist_ok=True)
 
-        log_file = log_dir / "aetherpackbot.log"
+        log_file = log_dir / "AetherPackBot.log"
 
         # 移除旧的文件处理器
         for handler in list(logger.handlers):
@@ -338,7 +338,7 @@ def get_logger(name: str) -> logging.Logger:
     子 logger 会继承父 logger 的 handler 和 filter。
     """
     _ensure_initialized()
-    return logging.getLogger(f"aetherpackbot.{name}")
+    return logging.getLogger(f"AetherPackBot.{name}")
 
 
 def get_log_manager() -> type[LogManager]:

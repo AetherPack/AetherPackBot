@@ -4,4 +4,4 @@
 并复用现有 core CLI 逻辑。
 """
 
-from aetherpackbot.core.cli.main import *  # noqa: F403
+from AetherPackBot.core.cli.main import *  # noqa: F403

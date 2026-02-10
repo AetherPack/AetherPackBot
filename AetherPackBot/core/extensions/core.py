@@ -8,11 +8,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from aetherpackbot.core.api.plugins import Plugin, PluginMetadata, PluginStatus
+from AetherPackBot.core.api.plugins import Plugin, PluginMetadata, PluginStatus
 
 if TYPE_CHECKING:
-    from aetherpackbot.core.api.events import Event, MessageEvent
-    from aetherpackbot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.api.events import Event, MessageEvent
+    from AetherPackBot.core.kernel.container import ServiceContainer
 
 
 class CoreExtension(Plugin):
@@ -61,7 +61,7 @@ class CoreExtension(Plugin):
         
         # Load wake words from config
         try:
-            from aetherpackbot.core.storage.config import ConfigurationManager
+            from AetherPackBot.core.storage.config import ConfigurationManager
             config = await container.resolve(ConfigurationManager)
             self._wake_words = config.get("wake_words", ["bot", "hey bot"])
         except Exception:
@@ -119,9 +119,9 @@ For more info, visit the dashboard at http://localhost:6185"""
             return "Status unavailable"
         
         try:
-            from aetherpackbot.core.platform.manager import PlatformManager
-            from aetherpackbot.core.provider.manager import ProviderManager
-            from aetherpackbot.core.plugin.manager import PluginManager
+            from AetherPackBot.core.platform.manager import PlatformManager
+            from AetherPackBot.core.provider.manager import ProviderManager
+            from AetherPackBot.core.plugin.manager import PluginManager
             
             status_lines = ["📊 *Bot Status*\n"]
             
