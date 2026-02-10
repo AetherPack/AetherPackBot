@@ -175,8 +175,8 @@ def display_banner() -> None:
 
 async def main() -> None:
     """Main application entry point."""
-    from core.kernel import ApplicationKernel
-    from core.kernel.logging import LogManager
+    from AetherPackBot.core.kernel import ApplicationKernel
+    from AetherPackBot.core.logging import LogManager
     
     args = parse_arguments()
     check_environment()

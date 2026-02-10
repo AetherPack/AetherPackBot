@@ -67,7 +67,7 @@ dev = [
 ]
 
 [project.scripts]
-aetherpackbot = "core.cli.__main__:main"
+aetherpackbot = "AetherPackBot.cli.__main__:main"
 
 [tool.ruff]
 line-length = 100
