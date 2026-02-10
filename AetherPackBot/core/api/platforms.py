@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from enum import Enum, auto
 from typing import Any, Protocol, runtime_checkable
 
-from aetherpackbot.core.api.messages import MessageChain, MessageSession
+from AetherPackBot.core.api.messages import MessageChain, MessageSession
 
 
 class PlatformStatus(Enum):

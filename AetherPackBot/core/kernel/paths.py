@@ -52,7 +52,7 @@ def get_config_file() -> Path:
 
 def get_db_path() -> Path:
     """数据库文件: data/aetherpackbot.db"""
-    return get_data_path() / "aetherpackbot.db"
+    return get_data_path() / "AetherPackBot.db"
 
 
 def get_db_url() -> str:
@@ -69,7 +69,7 @@ def get_log_dir() -> Path:
 
 def get_log_file() -> Path:
     """主日志文件: data/logs/aetherpackbot.log"""
-    return get_log_dir() / "aetherpackbot.log"
+    return get_log_dir() / "AetherPackBot.log"
 
 
 # ── 插件 ──

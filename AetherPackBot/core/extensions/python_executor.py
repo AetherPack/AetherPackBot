@@ -14,11 +14,11 @@ import traceback
 from contextlib import redirect_stdout, redirect_stderr
 from typing import TYPE_CHECKING, Any
 
-from aetherpackbot.core.api.plugins import Plugin, PluginMetadata, PluginStatus
-from aetherpackbot.core.api.agents import Tool, ToolParameter, ToolResult
+from AetherPackBot.core.api.plugins import Plugin, PluginMetadata, PluginStatus
+from AetherPackBot.core.api.agents import Tool, ToolParameter, ToolResult
 
 if TYPE_CHECKING:
-    from aetherpackbot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.kernel.container import ServiceContainer
 
 
 FORBIDDEN_IMPORTS = {
@@ -84,7 +84,7 @@ class PythonExecutorExtension(Plugin):
         self._status = PluginStatus.LOADED
         
         try:
-            from aetherpackbot.core.storage.config import ConfigurationManager
+            from AetherPackBot.core.storage.config import ConfigurationManager
             config = await container.resolve(ConfigurationManager)
             self._max_execution_time = config.get("python_executor.max_time", 10.0)
             self._max_output_length = config.get("python_executor.max_output", 4096)

@@ -6,36 +6,36 @@ for the major components of the system, enabling loose coupling and
 clean dependency injection.
 """
 
-from aetherpackbot.core.api.messages import (
+from AetherPackBot.core.api.messages import (
     MessageComponent,
     MessageChain,
     MessageSession,
     PlatformMetadata,
 )
-from aetherpackbot.core.api.events import (
+from AetherPackBot.core.api.events import (
     Event,
     EventType,
     EventHandler,
     EventFilter,
 )
-from aetherpackbot.core.api.providers import (
+from AetherPackBot.core.api.providers import (
     LLMProvider,
     TTSProvider,
     STTProvider,
     EmbeddingProvider,
     ProviderConfig,
 )
-from aetherpackbot.core.api.platforms import (
+from AetherPackBot.core.api.platforms import (
     PlatformAdapter,
     PlatformConfig,
     PlatformStatus,
 )
-from aetherpackbot.core.api.plugins import (
+from AetherPackBot.core.api.plugins import (
     Plugin,
     PluginMetadata,
     PluginHandler,
 )
-from aetherpackbot.core.api.agents import (
+from AetherPackBot.core.api.agents import (
     Agent,
     Tool,
     ToolResult,

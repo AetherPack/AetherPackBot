@@ -15,13 +15,13 @@ from dataclasses import dataclass
 from typing import Any, Callable, Awaitable
 from heapq import heappush, heappop
 
-from aetherpackbot.core.api.events import (
+from AetherPackBot.core.api.events import (
     Event,
     EventType,
     EventFilter,
     HandlerRegistration,
 )
-from aetherpackbot.core.kernel.logging import get_logger
+from AetherPackBot.core.kernel.logging import get_logger
 
 logger = get_logger("events")
 

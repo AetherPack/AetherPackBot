@@ -19,10 +19,10 @@ import jwt
 from quart import Quart, jsonify, request, send_from_directory, Response
 from quart_cors import cors
 
-from aetherpackbot.kernel.logging import get_logger
+from AetherPackBot.kernel.logging import get_logger
 
 if TYPE_CHECKING:
-    from aetherpackbot.kernel.container import ServiceContainer
+    from AetherPackBot.kernel.container import ServiceContainer
 
 logger = get_logger("webapi")
 
@@ -68,7 +68,7 @@ class WebServer:
     # ------------------------------------------------------------------
 
     async def start(self) -> None:
-        from aetherpackbot.storage.config import ConfigurationManager
+        from AetherPackBot.storage.config import ConfigurationManager
         try:
             cm = await self._container.resolve(ConfigurationManager)
             wc = cm.web
@@ -170,9 +170,9 @@ class WebServer:
         @app.route("/api/status")
         @require_auth
         async def get_status():
-            from aetherpackbot.platforms.manager import PlatformManager
-            from aetherpackbot.providers.manager import ProviderManager
-            from aetherpackbot.plugins.manager import PluginManager
+            from AetherPackBot.platforms.manager import PlatformManager
+            from AetherPackBot.providers.manager import ProviderManager
+            from AetherPackBot.plugins.manager import PluginManager
             import psutil
 
             result: dict[str, Any] = {
@@ -218,7 +218,7 @@ class WebServer:
         @app.route("/api/config", methods=["GET"])
         @require_auth
         async def get_config():
-            from aetherpackbot.storage.config import ConfigurationManager
+            from AetherPackBot.storage.config import ConfigurationManager
             try:
                 cm = await self._container.resolve(ConfigurationManager)
                 cfg = cm.to_dict()
@@ -236,7 +236,7 @@ class WebServer:
         @app.route("/api/config", methods=["PUT"])
         @require_auth
         async def update_config():
-            from aetherpackbot.storage.config import ConfigurationManager
+            from AetherPackBot.storage.config import ConfigurationManager
             try:
                 cm = await self._container.resolve(ConfigurationManager)
                 data = await request.get_json()
@@ -265,7 +265,7 @@ class WebServer:
         @app.route("/api/providers", methods=["GET"])
         @require_auth
         async def list_providers():
-            from aetherpackbot.providers.manager import ProviderManager
+            from AetherPackBot.providers.manager import ProviderManager
             try:
                 prov = await self._container.resolve(ProviderManager)
                 return _ok(prov.get_status_list())
@@ -275,8 +275,8 @@ class WebServer:
         @app.route("/api/providers", methods=["POST"])
         @require_auth
         async def add_provider():
-            from aetherpackbot.providers.manager import ProviderManager, PROVIDER_TYPE_INFO
-            from aetherpackbot.storage.config import ConfigurationManager
+            from AetherPackBot.providers.manager import ProviderManager, PROVIDER_TYPE_INFO
+            from AetherPackBot.storage.config import ConfigurationManager
             try:
                 data = await request.get_json()
                 ptype = data.get("type", "")
@@ -318,8 +318,8 @@ class WebServer:
         @app.route("/api/providers/<provider_id>", methods=["PUT"])
         @require_auth
         async def update_provider(provider_id: str):
-            from aetherpackbot.providers.manager import ProviderManager
-            from aetherpackbot.storage.config import ConfigurationManager
+            from AetherPackBot.providers.manager import ProviderManager
+            from AetherPackBot.storage.config import ConfigurationManager
             try:
                 data = await request.get_json()
                 prov = await self._container.resolve(ProviderManager)
@@ -352,8 +352,8 @@ class WebServer:
         @app.route("/api/providers/<provider_id>", methods=["DELETE"])
         @require_auth
         async def delete_provider(provider_id: str):
-            from aetherpackbot.providers.manager import ProviderManager
-            from aetherpackbot.storage.config import ConfigurationManager
+            from AetherPackBot.providers.manager import ProviderManager
+            from AetherPackBot.storage.config import ConfigurationManager
             try:
                 prov = await self._container.resolve(ProviderManager)
                 prov.unregister(provider_id)
@@ -368,7 +368,7 @@ class WebServer:
         @app.route("/api/providers/types", methods=["GET"])
         @require_auth
         async def list_provider_types():
-            from aetherpackbot.providers.manager import PROVIDER_REGISTRY, PROVIDER_TYPE_INFO
+            from AetherPackBot.providers.manager import PROVIDER_REGISTRY, PROVIDER_TYPE_INFO
             result = []
             for k in PROVIDER_REGISTRY:
                 info = PROVIDER_TYPE_INFO.get(k, {})
@@ -386,8 +386,8 @@ class WebServer:
         @app.route("/api/providers/<provider_id>/default", methods=["POST"])
         @require_auth
         async def set_default_provider(provider_id: str):
-            from aetherpackbot.providers.manager import ProviderManager
-            from aetherpackbot.storage.config import ConfigurationManager
+            from AetherPackBot.providers.manager import ProviderManager
+            from AetherPackBot.storage.config import ConfigurationManager
             try:
                 prov = await self._container.resolve(ProviderManager)
                 prov.set_default(provider_id)
@@ -401,7 +401,7 @@ class WebServer:
         @app.route("/api/providers/<provider_id>/health", methods=["GET"])
         @require_auth
         async def check_provider_health(provider_id: str):
-            from aetherpackbot.providers.manager import ProviderManager
+            from AetherPackBot.providers.manager import ProviderManager
             try:
                 prov = await self._container.resolve(ProviderManager)
                 provider = prov.get(provider_id)
@@ -416,7 +416,7 @@ class WebServer:
         @app.route("/api/platforms", methods=["GET"])
         @require_auth
         async def list_platforms():
-            from aetherpackbot.platforms.manager import PlatformManager
+            from AetherPackBot.platforms.manager import PlatformManager
             try:
                 pm = await self._container.resolve(PlatformManager)
                 return _ok(pm.get_status_list())
@@ -426,8 +426,8 @@ class WebServer:
         @app.route("/api/platforms", methods=["POST"])
         @require_auth
         async def add_platform():
-            from aetherpackbot.platforms.manager import PlatformManager
-            from aetherpackbot.storage.config import ConfigurationManager
+            from AetherPackBot.platforms.manager import PlatformManager
+            from AetherPackBot.storage.config import ConfigurationManager
             try:
                 data = await request.get_json()
                 if not data.get("type"):
@@ -451,8 +451,8 @@ class WebServer:
         @app.route("/api/platforms/<platform_id>", methods=["PUT"])
         @require_auth
         async def update_platform(platform_id: str):
-            from aetherpackbot.platforms.manager import PlatformManager
-            from aetherpackbot.storage.config import ConfigurationManager
+            from AetherPackBot.platforms.manager import PlatformManager
+            from AetherPackBot.storage.config import ConfigurationManager
             try:
                 data = await request.get_json()
                 pm = await self._container.resolve(PlatformManager)
@@ -478,8 +478,8 @@ class WebServer:
         @app.route("/api/platforms/<platform_id>", methods=["DELETE"])
         @require_auth
         async def delete_platform(platform_id: str):
-            from aetherpackbot.platforms.manager import PlatformManager
-            from aetherpackbot.storage.config import ConfigurationManager
+            from AetherPackBot.platforms.manager import PlatformManager
+            from AetherPackBot.storage.config import ConfigurationManager
             try:
                 pm = await self._container.resolve(PlatformManager)
                 adapter = pm.get_adapter(platform_id)
@@ -500,8 +500,8 @@ class WebServer:
         @app.route("/api/platforms/<platform_id>/toggle", methods=["POST"])
         @require_auth
         async def toggle_platform(platform_id: str):
-            from aetherpackbot.platforms.manager import PlatformManager
-            from aetherpackbot.protocols.platforms import PlatformStatus
+            from AetherPackBot.platforms.manager import PlatformManager
+            from AetherPackBot.protocols.platforms import PlatformStatus
             try:
                 pm = await self._container.resolve(PlatformManager)
                 adapter = pm.get_adapter(platform_id)
@@ -519,7 +519,7 @@ class WebServer:
         @app.route("/api/platforms/types", methods=["GET"])
         @require_auth
         async def list_platform_types():
-            from aetherpackbot.platforms.manager import PLATFORM_REGISTRY
+            from AetherPackBot.platforms.manager import PLATFORM_REGISTRY
             return _ok([
                 {
                     "type": k,
@@ -534,7 +534,7 @@ class WebServer:
         @app.route("/api/plugins", methods=["GET"])
         @require_auth
         async def list_plugins():
-            from aetherpackbot.plugins.manager import PluginManager
+            from AetherPackBot.plugins.manager import PluginManager
             try:
                 plm = await self._container.resolve(PluginManager)
                 return _ok([
@@ -554,7 +554,7 @@ class WebServer:
         @app.route("/api/plugins/<plugin_name>/reload", methods=["POST"])
         @require_auth
         async def reload_plugin(plugin_name: str):
-            from aetherpackbot.plugins.manager import PluginManager
+            from AetherPackBot.plugins.manager import PluginManager
             try:
                 plm = await self._container.resolve(PluginManager)
                 ok = await plm.reload_plugin(plugin_name)
@@ -566,7 +566,7 @@ class WebServer:
         @app.route("/api/tools", methods=["GET"])
         @require_auth
         async def list_tools():
-            from aetherpackbot.agents.orchestrator import AgentOrchestrator
+            from AetherPackBot.agents.orchestrator import AgentOrchestrator
             try:
                 orch = await self._container.resolve(AgentOrchestrator)
                 return _ok([
@@ -588,9 +588,9 @@ class WebServer:
         @app.route("/api/chat", methods=["POST"])
         @require_auth
         async def chat():
-            from aetherpackbot.providers.manager import ProviderManager
-            from aetherpackbot.protocols.providers import LLMMessage, LLMRequest
-            from aetherpackbot.storage.database import DatabaseManager, MessageHistoryModel
+            from AetherPackBot.providers.manager import ProviderManager
+            from AetherPackBot.protocols.providers import LLMMessage, LLMRequest
+            from AetherPackBot.storage.database import DatabaseManager, MessageHistoryModel
             try:
                 data = await request.get_json()
                 user_msg = data.get("message", "")
@@ -611,7 +611,7 @@ class WebServer:
                 
                 # 如果前端没传 system_prompt，自动从配置中加载人格设置
                 if not sp:
-                    from aetherpackbot.storage.config import ConfigurationManager
+                    from AetherPackBot.storage.config import ConfigurationManager
                     try:
                         cm = await self._container.resolve(ConfigurationManager)
                         # 先尝试顶层 system_prompt（前端设置可能写在这里）
@@ -676,7 +676,7 @@ class WebServer:
         @app.route("/api/conversations", methods=["GET"])
         @require_auth
         async def list_conversations():
-            from aetherpackbot.storage.database import DatabaseManager
+            from AetherPackBot.storage.database import DatabaseManager
             try:
                 db = await self._container.resolve(DatabaseManager)
                 convs = await db.get_recent_conversations(limit=50)
@@ -697,7 +697,7 @@ class WebServer:
         @app.route("/api/chat/history", methods=["GET"])
         @require_auth
         async def get_chat_history():
-            from aetherpackbot.storage.database import DatabaseManager, MessageHistoryModel
+            from AetherPackBot.storage.database import DatabaseManager, MessageHistoryModel
             from sqlalchemy import select
             try:
                 db = await self._container.resolve(DatabaseManager)
@@ -722,7 +722,7 @@ class WebServer:
         @app.route("/api/logs", methods=["GET"])
         @require_auth
         async def get_logs():
-            from aetherpackbot.kernel.logging import get_log_manager
+            from AetherPackBot.kernel.logging import get_log_manager
             try:
                 count = request.args.get("count", 100, type=int)
                 mgr = get_log_manager()
@@ -756,7 +756,7 @@ class WebServer:
             return _error("Not found", 404)
 
     def _get_static_dir(self) -> Path | None:
-        from aetherpackbot.kernel.paths import get_dashboard_dir
+        from AetherPackBot.kernel.paths import get_dashboard_dir
 
         # 优先使用自定义路径（如果在构造时传入）
         if self._webui_dir:

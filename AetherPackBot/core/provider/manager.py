@@ -8,12 +8,12 @@ from __future__ import annotations
 
 from typing import Any, TYPE_CHECKING
 
-from aetherpackbot.core.api.providers import (
+from AetherPackBot.core.api.providers import (
     LLMProvider,
     ProviderConfig,
     ProviderType,
 )
-from aetherpackbot.core.provider.base import (
+from AetherPackBot.core.provider.base import (
     BaseLLMProvider,
     OpenAIProvider,
     AnthropicProvider,
@@ -29,10 +29,10 @@ from aetherpackbot.core.provider.base import (
     XAIProvider,
     LMStudioProvider,
 )
-from aetherpackbot.core.kernel.logging import get_logger
+from AetherPackBot.core.kernel.logging import get_logger
 
 if TYPE_CHECKING:
-    from aetherpackbot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.kernel.container import ServiceContainer
 
 logger = get_logger("providers")
 
@@ -169,7 +169,7 @@ class ProviderManager:
     
     async def initialize(self) -> None:
         """Initialize providers from configuration."""
-        from aetherpackbot.core.storage.config import ConfigurationManager
+        from AetherPackBot.core.storage.config import ConfigurationManager
         
         config_manager = await self._container.resolve(ConfigurationManager)
         providers_config = config_manager.get("providers", [])

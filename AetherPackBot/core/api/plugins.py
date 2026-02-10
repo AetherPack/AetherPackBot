@@ -12,7 +12,7 @@ from enum import Enum, auto
 from typing import Any, Callable, Protocol, runtime_checkable, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from aetherpackbot.core.api.events import Event, EventFilter, EventType
+    from AetherPackBot.core.api.events import Event, EventFilter, EventType
 
 
 class PluginStatus(Enum):
@@ -209,7 +209,7 @@ def on_message(
             ...
     """
     def decorator(func: Callable) -> Callable:
-        from aetherpackbot.core.api.events import EventType
+        from AetherPackBot.core.api.events import EventType
         func._handler_def = PluginHandler(
             handler=func,
             event_type=EventType.MESSAGE_RECEIVED,

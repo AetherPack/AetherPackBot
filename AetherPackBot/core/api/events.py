@@ -99,7 +99,7 @@ class Event:
 class MessageEvent(Event):
     """Event carrying a message."""
     
-    from aetherpackbot.core.api.messages import Message, MessageChain
+    from AetherPackBot.core.api.messages import Message, MessageChain
     
     message: Message | None = None
     
@@ -132,7 +132,7 @@ class MessageEvent(Event):
     
     def set_result(self, chain: MessageChain) -> None:
         """Set the response result."""
-        from aetherpackbot.core.api.messages import MessageChain
+        from AetherPackBot.core.api.messages import MessageChain
         self._result = chain
         self.is_handled = True
     

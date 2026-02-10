@@ -16,9 +16,9 @@ import signal
 from pathlib import Path
 from typing import Any
 
-from aetherpackbot.core.kernel.container import ServiceContainer
-from aetherpackbot.core.kernel.lifecycle import LifecycleManager, LifecycleState
-from aetherpackbot.core.kernel.logging import LogManager, LogBroker, get_logger, setup_logging
+from AetherPackBot.core.kernel.container import ServiceContainer
+from AetherPackBot.core.kernel.lifecycle import LifecycleManager, LifecycleState
+from AetherPackBot.core.kernel.logging import LogManager, LogBroker, get_logger, setup_logging
 
 
 class ApplicationKernel:
@@ -111,13 +111,13 @@ class ApplicationKernel:
     
     async def _initialize_directories(self) -> None:
         """Create required data directories."""
-        from aetherpackbot.core.kernel.paths import ensure_directories
+        from AetherPackBot.core.kernel.paths import ensure_directories
         ensure_directories()
         self._logger.debug("Data directories initialized")
     
     async def _load_configuration(self) -> None:
         """Load application configuration."""
-        from aetherpackbot.core.storage.config import ConfigurationManager
+        from AetherPackBot.core.storage.config import ConfigurationManager
         
         config_manager = ConfigurationManager(self._config_path)
         await config_manager.load()
@@ -136,46 +136,46 @@ class ApplicationKernel:
         # Import and register all service modules
         
         # Storage layer
-        from aetherpackbot.core.storage.database import DatabaseManager
+        from AetherPackBot.core.storage.database import DatabaseManager
         db_manager = DatabaseManager()
         await db_manager.initialize()
         self._container.register_instance(DatabaseManager, db_manager)
         self._lifecycle.register(db_manager, priority=100)
         
         # Event system
-        from aetherpackbot.core.messaging.events import EventDispatcher
+        from AetherPackBot.core.messaging.events import EventDispatcher
         event_dispatcher = EventDispatcher()
         self._container.register_instance(EventDispatcher, event_dispatcher)
         self._lifecycle.register(event_dispatcher, priority=90)
         
         # Provider manager
-        from aetherpackbot.core.provider.manager import ProviderManager
+        from AetherPackBot.core.provider.manager import ProviderManager
         provider_manager = ProviderManager(self._container)
         await provider_manager.initialize()
         self._container.register_instance(ProviderManager, provider_manager)
         self._lifecycle.register(provider_manager, priority=80)
         
         # Platform manager
-        from aetherpackbot.core.platform.manager import PlatformManager
+        from AetherPackBot.core.platform.manager import PlatformManager
         platform_manager = PlatformManager(self._container, event_dispatcher)
         self._container.register_instance(PlatformManager, platform_manager)
         self._lifecycle.register(platform_manager, priority=70)
         
         # Plugin system
-        from aetherpackbot.core.plugin.manager import PluginManager
+        from AetherPackBot.core.plugin.manager import PluginManager
         plugin_manager = PluginManager(self._container)
         await plugin_manager.scan_and_load()
         self._container.register_instance(PluginManager, plugin_manager)
         self._lifecycle.register(plugin_manager, priority=60)
         
         # Agent system
-        from aetherpackbot.core.agent.orchestrator import AgentOrchestrator
+        from AetherPackBot.core.agent.orchestrator import AgentOrchestrator
         agent_orchestrator = AgentOrchestrator(self._container)
         self._container.register_instance(AgentOrchestrator, agent_orchestrator)
         self._lifecycle.register(agent_orchestrator, priority=50)
         
         # Message processor (pipeline)
-        from aetherpackbot.core.messaging.processor import MessageProcessor
+        from AetherPackBot.core.messaging.processor import MessageProcessor
         message_processor = MessageProcessor(self._container)
         self._container.register_instance(MessageProcessor, message_processor)
         self._lifecycle.register(message_processor, priority=40)
@@ -183,7 +183,7 @@ class ApplicationKernel:
         # ── 关键：将 MessageProcessor 注册为 EventDispatcher 的消息处理器 ──
         # 参考 AstrBot: EventBus.dispatch() 从队列取事件后交给 Pipeline 处理
         # 没有这一步，平台消息进入 EventDispatcher 后无人消费
-        from aetherpackbot.core.api.events import EventType
+        from AetherPackBot.core.api.events import EventType
         event_dispatcher.register(
             handler=message_processor.process,
             event_types=EventType.MESSAGE_RECEIVED,
@@ -192,7 +192,7 @@ class ApplicationKernel:
         )
         
         # Web API server
-        from aetherpackbot.core.webapi.server import WebServer
+        from AetherPackBot.core.webapi.server import WebServer
         web_server = WebServer(self._container, self._webui_dir)
         self._container.register_instance(WebServer, web_server)
         self._lifecycle.register(web_server, priority=30)

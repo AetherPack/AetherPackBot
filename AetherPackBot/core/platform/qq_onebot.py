@@ -13,13 +13,13 @@ except ImportError:
     CQHttp = None  # type: ignore
     Event = None   # type: ignore
 
-from aetherpackbot.core.api.platforms import (
+from AetherPackBot.core.api.platforms import (
     BasePlatformAdapter,
     PlatformConfig,
     PlatformStatus,
     PlatformCapabilities,
 )
-from aetherpackbot.core.api.messages import (
+from AetherPackBot.core.api.messages import (
     Message,
     MessageChain,
     MessageSession,
@@ -28,7 +28,7 @@ from aetherpackbot.core.api.messages import (
     ImageComponent,
     ComponentType
 )
-from aetherpackbot.core.kernel.logging import get_logger
+from AetherPackBot.core.kernel.logging import get_logger
 
 logger = get_logger("platforms.qq_onebot")
 
@@ -266,7 +266,7 @@ class QQOneBotAdapter(BasePlatformAdapter):
                     })
             elif comp.type == ComponentType.MENTION:
                 # @某人
-                from aetherpackbot.core.api.messages import MentionComponent
+                from AetherPackBot.core.api.messages import MentionComponent
                 mention_comp = cast(MentionComponent, comp)
                 onebot_arr.append({
                     "type": "at",
@@ -274,7 +274,7 @@ class QQOneBotAdapter(BasePlatformAdapter):
                 })
             elif comp.type == ComponentType.REPLY:
                 # 回复消息
-                from aetherpackbot.core.api.messages import ReplyComponent
+                from AetherPackBot.core.api.messages import ReplyComponent
                 reply_comp = cast(ReplyComponent, comp)
                 onebot_arr.append({
                     "type": "reply",

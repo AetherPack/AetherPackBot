@@ -5,8 +5,8 @@ Provides the message processing pipeline including event dispatching,
 message transformation, and response generation.
 """
 
-from aetherpackbot.core.messaging.events import EventDispatcher
-from aetherpackbot.core.messaging.processor import MessageProcessor
+from AetherPackBot.core.messaging.events import EventDispatcher
+from AetherPackBot.core.messaging.processor import MessageProcessor
 
 __all__ = [
     "EventDispatcher",

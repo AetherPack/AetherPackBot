@@ -9,14 +9,14 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, AsyncIterator
 
-from aetherpackbot.core.api.providers import (
+from AetherPackBot.core.api.providers import (
     LLMProvider,
     ProviderConfig,
     LLMRequest,
     LLMResponse,
     StreamingChunk,
 )
-from aetherpackbot.core.kernel.logging import get_logger
+from AetherPackBot.core.kernel.logging import get_logger
 
 logger = get_logger("providers")
 
@@ -65,7 +65,7 @@ class BaseLLMProvider(ABC):
         with very small max_tokens).
         """
         try:
-            from aetherpackbot.core.api.providers import LLMMessage
+            from AetherPackBot.core.api.providers import LLMMessage
             
             request = LLMRequest(
                 messages=[LLMMessage(role="user", content="Hi")],

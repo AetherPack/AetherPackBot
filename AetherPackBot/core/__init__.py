@@ -8,7 +8,7 @@ and LLM providers with a plugin-based architecture.
 __version__ = "1.0.0"
 __author__ = "AetherPackBot Team"
 
-from aetherpackbot.core.kernel import ApplicationKernel
+from AetherPackBot.core.kernel import ApplicationKernel
 
 __all__ = [
     "ApplicationKernel",

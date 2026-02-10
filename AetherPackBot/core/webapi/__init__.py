@@ -7,7 +7,7 @@ Provides the web interface including:
 - Static file serving for dashboard
 """
 
-from aetherpackbot.core.webapi.server import WebServer
+from AetherPackBot.core.webapi.server import WebServer
 
 __all__ = [
     "WebServer",
