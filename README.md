@@ -25,19 +25,18 @@ uv run main.py
 ## Architecture
 
 ```text
-AETHERPACKBOT/
-├── AetherPackBot/              # 主框架（纯 Python）
-│   ├── cli/                    # AetherPackBot CLI 窗口（映射到 aetherpackbot.core.cli）
-│   ├── core/                   # 框架核心（映射到 aetherpackbot.core.kernel）
-│   ├── dashboard/              # 对接 WebUI（映射到 aetherpackbot.core.webapi）
-│   └── api/                    # 对接所有 API（映射到 aetherpackbot.core.api）
-├── dashboard/                  # WebUI 面板前端目录（预留）
-├── data/                       # 运行后自动创建/生成数据文件
-└── plugin/
-    └── AetherPackBot/          # 基础指令与功能插件目录
+AETHERPACKBOT
+├───AetherPackBot（主框架，纯py文件）
+│   ├───cli（AetherPackBot CLI窗口）
+│   ├───core（框架核心）
+│   └───dashboard（对接webui）
+│   └───api（对接所有api）
+├───changelogs（更新版本log信息）
+├───dashboard（webui面板前端）
+├───data（默认不带，启动后自己创建并生成数据文件）
+└───packages（自带插件）
+    └───AetherPackBot（基础指令，功能）
 ```
-
-> 说明：为保持兼容性，核心实现已迁移至 `aetherpackbot/core/`，上述 `AetherPackBot/*` 为对应命名空间映射与新目录结构入口。
 
 ## License
 
