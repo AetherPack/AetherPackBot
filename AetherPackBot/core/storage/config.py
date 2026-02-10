@@ -26,7 +26,7 @@ DEFAULT_CONFIG = {
     # Web server settings
     "web": {
         "host": "0.0.0.0",
-        "port": 6185,
+        "port": 8080,
         "enable_cors": True,
         "admin_username": "aetherpackbot",
         "admin_password": "aetherpackbot",
@@ -96,7 +96,7 @@ class WebConfig:
     """Web server configuration."""
     
     host: str = "0.0.0.0"
-    port: int = 6185
+    port: int = 8080
     enable_cors: bool = True
     admin_username: str = "aetherpackbot"
     admin_password: str = "aetherpackbot"

@@ -79,7 +79,7 @@ class WebServer:
                 self._jwt_secret = wc.jwt_secret
             host, port = wc.host, wc.port
         except Exception:
-            host, port = "0.0.0.0", 6185
+            host, port = "0.0.0.0", 8080
 
         self._app = Quart(__name__, static_folder=None)
         self._app = cors(

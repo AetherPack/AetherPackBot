@@ -104,7 +104,7 @@ You can also use @bot to mention the bot.
 • /reload - Reload plugins
 • /config - View/modify configuration
 
-For more info, visit the dashboard at http://localhost:6185"""
+For more info, visit the dashboard at http://localhost:8080"""
         
         return help_text
     
