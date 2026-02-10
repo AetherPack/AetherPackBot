@@ -1,3 +1,3 @@
-"""Framework core namespace mapped to the existing kernel implementation."""
+"""框架核心命名空间：映射到现有内核实现。"""
 
 from core.kernel import *  # noqa: F403

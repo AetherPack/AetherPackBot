@@ -8,26 +8,26 @@ requires-python = ">=3.10"
 keywords = ["AetherPackBot", "Chatbot", "LLM", "AI Assistant"]
 
 dependencies = [
-  # Async frameworks
+  # 异步框架
   "aiohttp>=3.11.0",
   "aiosqlite>=0.21.0",
   "asyncio>=3.4.3",
   
-  # LLM providers
+  # LLM 提供商
   "openai>=1.50.0",
   "anthropic>=0.45.0",
   "google-genai>=1.50.0",
   
-  # Web framework
+  # Web 框架
   "quart>=0.20.0",
   "quart-cors>=0.8.0",
   "pyjwt>=2.10.0",
   
-  # Database
+  # 数据库
   "sqlalchemy[asyncio]>=2.0.35",
   "sqlmodel>=0.0.22",
   
-  # Platform adapters
+  # 平台适配器
   "python-telegram-bot>=22.0",
   "py-cord>=2.6.0",
   "aiocqhttp>=1.4.4",
@@ -36,7 +36,7 @@ dependencies = [
   "lark-oapi>=1.4.0",
   "slack-sdk>=3.35.0",
   
-  # Utilities
+  # 工具库
   "pydantic>=2.10.0",
   "colorlog>=6.9.0",
   "pillow>=11.0.0",
@@ -49,12 +49,12 @@ dependencies = [
   "websockets>=15.0.0",
   "tenacity>=9.1.0",
   
-  # Document processing
+  # 文档处理
   "pypdf>=6.0.0",
   "rank-bm25>=0.2.2",
   "jieba>=0.42.0",
   
-  # Vector embeddings
+  # 向量嵌入
   "faiss-cpu>=1.10.0",
 ]
 
@@ -75,11 +75,11 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = [
-  "F",     # Pyflakes
-  "W",     # pycodestyle warnings
-  "E",     # pycodestyle errors
-  "I",     # import-order
-  "UP",    # pyupgrade
+  "F",     # Pyflakes 规则
+  "W",     # pycodestyle 警告
+  "E",     # pycodestyle 错误
+  "I",     # 导入顺序
+  "UP",    # pyupgrade 规则
 ]
 ignore = ["E501"]
 

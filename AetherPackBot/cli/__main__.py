@@ -1,10 +1,10 @@
-"""Console-script launcher for `python -m AetherPackBot.cli`."""
+"""`python -m AetherPackBot.cli` 的命令行启动入口。"""
 
 from AetherPackBot.cli.main import run_cli
 
 
 def main() -> int:
-    """Run CLI and return process exit code."""
+    """执行 CLI 并返回进程退出码。"""
     return run_cli()
 
 

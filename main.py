@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-AetherPackBot - Multi-platform LLM Chatbot Framework
-Main entry point for the application.
+AetherPackBot - 多平台 LLM 聊天机器人框架
+应用主入口。
 """
 
 import argparse
@@ -10,16 +10,16 @@ import subprocess
 import sys
 from pathlib import Path
 
-# Ensure project root is in path
+# 确保项目根目录已加入 Python 路径
 PROJECT_ROOT = Path(__file__).parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 
 def install_dependencies() -> None:
     """
-    Smart dependency installer:
-    - First run: install all from requirements.txt, then record installed set
-    - Subsequent runs: only check for missing packages and install them
+    智能依赖安装器：
+    - 首次运行：从 requirements.txt 完整安装并记录已安装集合
+    - 后续运行：仅检查缺失依赖并安装
     """
     requirements_file = PROJECT_ROOT / "requirements.txt"
     marker_file = PROJECT_ROOT / "data" / ".deps_installed"
@@ -28,13 +28,13 @@ def install_dependencies() -> None:
         return
 
     def _parse_requirements() -> list[str]:
-        """Parse package names from requirements.txt (ignore comments/blanks)."""
+        """从 requirements.txt 解析包名（忽略注释和空行）。"""
         pkgs = []
         for line in requirements_file.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if not line or line.startswith("#") or line.startswith("-"):
                 continue
-            # Extract bare package name: "aiohttp>=3.11.0" -> "aiohttp"
+            # 提取纯包名："aiohttp>=3.11.0" -> "aiohttp"
             import re
             name = re.split(r"[>=<!\[;]", line)[0].strip().lower()
             if name:
@@ -42,7 +42,7 @@ def install_dependencies() -> None:
         return pkgs
 
     def _get_installed() -> set[str]:
-        """Get set of currently installed package names."""
+        """获取当前已安装包名集合。"""
         try:
             result = subprocess.run(
                 [sys.executable, "-m", "pip", "list", "--format=columns",
@@ -50,7 +50,7 @@ def install_dependencies() -> None:
                 capture_output=True, text=True, timeout=30,
             )
             installed = set()
-            for line in result.stdout.splitlines()[2:]:  # skip header lines
+            for line in result.stdout.splitlines()[2:]:  # 跳过表头行
                 parts = line.split()
                 if parts:
                     installed.add(parts[0].lower())
@@ -59,7 +59,7 @@ def install_dependencies() -> None:
             return set()
 
     def _install(packages: list[str]) -> None:
-        """Install a list of packages via pip."""
+        """通过 pip 安装一组包。"""
         result = subprocess.run(
             [sys.executable, "-m", "pip", "install",
              "--quiet", "--disable-pip-version-check"] + packages,
@@ -75,7 +75,7 @@ def install_dependencies() -> None:
     if not required:
         return
 
-    # --- First run: full install from requirements.txt ---
+    # --- 首次运行：按 requirements.txt 全量安装 ---
     if not marker_file.exists():
         print("  [deps] First run - installing all dependencies...")
         result = subprocess.run(
@@ -92,16 +92,16 @@ def install_dependencies() -> None:
                 print(f"    {line}")
             print("  [deps] Some dependencies failed, continuing...")
 
-        # Write marker
+        # 写入标记文件
         marker_file.parent.mkdir(parents=True, exist_ok=True)
         marker_file.write_text(
             "\n".join(required), encoding="utf-8"
         )
         return
 
-    # --- Subsequent runs: only install missing packages ---
+    # --- 后续运行：仅安装缺失包 ---
     installed = _get_installed()
-    # Normalize: pip uses hyphens, requirements may use underscores
+    # 归一化：pip 使用连字符，requirements 可能使用下划线
     normalize = lambda s: s.replace("_", "-").lower()
     installed_norm = {normalize(p) for p in installed}
 
@@ -114,14 +114,14 @@ def install_dependencies() -> None:
     print(f"  [deps] Installing {len(missing)} missing: {', '.join(missing)}")
     _install(missing)
 
-    # Update marker
+    # 更新标记文件
     marker_file.write_text(
         "\n".join(required), encoding="utf-8"
     )
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Parse command line arguments."""
+    """解析命令行参数。"""
     parser = argparse.ArgumentParser(
         prog="AetherPackBot",
         description="Multi-platform LLM chatbot and development framework",
@@ -152,14 +152,14 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def check_environment() -> None:
-    """Validate runtime environment requirements."""
+    """校验运行环境要求。"""
     if sys.version_info < (3, 10):
         print("Error: Python 3.10 or higher is required.")
         sys.exit(1)
 
 
 def display_banner() -> None:
-    """Display application startup banner."""
+    """显示应用启动横幅。"""
     banner = r"""
     ___       _   _               ____            _    ____        _   
    / _ \  ___| |_| |__   ___ _ __|  _ \ __ _  ___| | _| __ )  ___ | |_ 
@@ -174,7 +174,7 @@ def display_banner() -> None:
 
 
 async def main() -> None:
-    """Main application entry point."""
+    """应用主入口。"""
     from AetherPackBot.core.kernel import ApplicationKernel
     from AetherPackBot.core.logging import LogManager
     
@@ -182,14 +182,14 @@ async def main() -> None:
     check_environment()
     display_banner()
     
-    # Initialize logging
+    # 初始化日志
     log_manager = LogManager()
     logger = log_manager.GetLogger("main")
     
     logger.info("Initializing AetherPackBot...")
     
     try:
-        # Create and boot the application kernel
+        # 创建并启动应用内核
         kernel = ApplicationKernel(
             webui_dir=args.webui_dir,
             config_path=args.config,
@@ -199,7 +199,7 @@ async def main() -> None:
         await kernel.boot()
         logger.info("AetherPackBot started successfully.")
         
-        # Run until shutdown signal
+        # 持续运行直到收到关闭信号
         await kernel.run_forever()
         
     except KeyboardInterrupt:

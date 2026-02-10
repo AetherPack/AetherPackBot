@@ -1,3 +1,3 @@
-"""Compatibility logging module under `AetherPackBot.core`."""
+"""`AetherPackBot.core` 下的日志兼容模块。"""
 
 from core.kernel.logging import *  # noqa: F403

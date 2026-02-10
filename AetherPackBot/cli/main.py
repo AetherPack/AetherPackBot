@@ -1,7 +1,7 @@
-"""AetherPackBot CLI entry module.
+"""AetherPackBot CLI 入口模块。
 
-This module keeps CLI access under the new `AetherPackBot.cli` namespace
-while delegating implementation to the existing core CLI logic.
+该模块在 `AetherPackBot.cli` 命名空间下提供 CLI 入口，
+并复用现有 core CLI 逻辑。
 """
 
 from core.cli.main import *  # noqa: F403

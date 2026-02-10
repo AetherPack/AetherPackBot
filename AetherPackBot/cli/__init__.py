@@ -1,3 +1,3 @@
-"""CLI namespace mapped to the existing core CLI implementation."""
+"""CLI 命名空间：映射到现有 core CLI 实现。"""
 
 from core.cli import *  # noqa: F403
