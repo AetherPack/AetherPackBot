@@ -24,10 +24,10 @@ from AetherPackBot.core.api.messages import (
     PlatformMetadata,
     TextComponent,
 )
-from AetherPackBot.core.kernel.logging import get_logger
+from AetherPackBot.core.logging import get_logger
 
 if TYPE_CHECKING:
-    from AetherPackBot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.container import ServiceContainer
     from AetherPackBot.core.messaging.events import EventDispatcher
 
 logger = get_logger("platforms")

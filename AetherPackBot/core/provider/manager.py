@@ -29,10 +29,10 @@ from AetherPackBot.core.provider.base import (
     XAIProvider,
     LMStudioProvider,
 )
-from AetherPackBot.core.kernel.logging import get_logger
+from AetherPackBot.core.logging import get_logger
 
 if TYPE_CHECKING:
-    from AetherPackBot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.container import ServiceContainer
 
 logger = get_logger("providers")
 

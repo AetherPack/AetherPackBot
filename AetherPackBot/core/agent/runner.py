@@ -27,7 +27,7 @@ from AetherPackBot.core.api.providers import (
     StreamingChunk,
 )
 from AetherPackBot.core.provider.base import BaseLLMProvider
-from AetherPackBot.core.kernel.logging import get_logger
+from AetherPackBot.core.logging import get_logger
 
 logger = get_logger("agents")
 

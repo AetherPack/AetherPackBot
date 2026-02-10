@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from AetherPackBot.core.kernel.logging import get_logger
+from AetherPackBot.core.logging import get_logger
 
 logger = get_logger("cli")
 
@@ -109,7 +109,7 @@ def run_cli() -> int:
 
 async def cmd_run(args) -> int:
     """Run the bot."""
-    from AetherPackBot.core.kernel.app_kernel import ApplicationKernel
+    from AetherPackBot.core.app_kernel import ApplicationKernel
     
     kernel = ApplicationKernel(
         config_path=args.config,
@@ -148,7 +148,7 @@ async def cmd_plugin(args) -> int:
 async def plugin_list_cmd() -> int:
     """List installed plugins."""
     from AetherPackBot.core.plugin.manager import PluginManager
-    from AetherPackBot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.container import ServiceContainer
     
     container = ServiceContainer()
     manager = PluginManager(container)

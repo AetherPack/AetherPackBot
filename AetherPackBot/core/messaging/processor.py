@@ -21,10 +21,10 @@ from typing import Any, Callable, Awaitable, TYPE_CHECKING
 
 from AetherPackBot.core.api.events import Event, EventType, MessageEvent
 from AetherPackBot.core.api.messages import MessageChain
-from AetherPackBot.core.kernel.logging import get_logger
+from AetherPackBot.core.logging import get_logger
 
 if TYPE_CHECKING:
-    from AetherPackBot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.container import ServiceContainer
 
 logger = get_logger("processor")
 

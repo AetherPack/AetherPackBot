@@ -20,10 +20,10 @@ import jwt
 from quart import Quart, jsonify, request, send_from_directory, Response
 from quart_cors import cors
 
-from AetherPackBot.core.kernel.logging import get_logger
+from AetherPackBot.core.logging import get_logger
 
 if TYPE_CHECKING:
-    from AetherPackBot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.container import ServiceContainer
 
 logger = get_logger("webapi")
 
@@ -738,7 +738,7 @@ class WebServer:
         @app.route("/api/logs", methods=["GET"])
         @require_auth
         async def get_logs():
-            from AetherPackBot.core.kernel.logging import get_log_broker
+            from AetherPackBot.core.logging import get_log_broker
             try:
                 count = request.args.get("count", 100, type=int)
                 broker = get_log_broker()
@@ -780,7 +780,7 @@ class WebServer:
             return _error("Not found", 404)
 
     def _get_static_dir(self) -> Path | None:
-        from AetherPackBot.core.kernel.paths import get_dashboard_dir
+        from AetherPackBot.core.paths import get_dashboard_dir
 
         # 优先使用自定义路径（如果在构造时传入）
         if self._webui_dir:

@@ -21,7 +21,7 @@ from AetherPackBot.core.api.events import (
     EventFilter,
     HandlerRegistration,
 )
-from AetherPackBot.core.kernel.logging import get_logger
+from AetherPackBot.core.logging import get_logger
 
 logger = get_logger("events")
 

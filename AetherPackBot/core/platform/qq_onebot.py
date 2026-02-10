@@ -28,7 +28,7 @@ from AetherPackBot.core.api.messages import (
     ImageComponent,
     ComponentType
 )
-from AetherPackBot.core.kernel.logging import get_logger
+from AetherPackBot.core.logging import get_logger
 
 logger = get_logger("platforms.qq_onebot")
 
