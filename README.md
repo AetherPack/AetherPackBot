@@ -24,7 +24,7 @@ uv run main.py
 
 ## Architecture
 
-```
+```text
 AETHERPACKBOT
 ├───AetherPackBot（主框架，纯py文件）
 │   ├───cli（AetherPackBot CLI窗口）
