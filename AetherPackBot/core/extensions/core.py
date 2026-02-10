@@ -12,7 +12,7 @@ from AetherPackBot.core.api.plugins import Plugin, PluginMetadata, PluginStatus
 
 if TYPE_CHECKING:
     from AetherPackBot.core.api.events import Event, MessageEvent
-    from AetherPackBot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.container import ServiceContainer
 
 
 class CoreExtension(Plugin):

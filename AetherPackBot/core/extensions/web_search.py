@@ -16,7 +16,7 @@ from AetherPackBot.core.api.plugins import Plugin, PluginMetadata, PluginStatus
 from AetherPackBot.core.api.agents import Tool, ToolParameter, ToolResult
 
 if TYPE_CHECKING:
-    from AetherPackBot.core.kernel.container import ServiceContainer
+    from AetherPackBot.core.container import ServiceContainer
 
 
 class WebSearchExtension(Plugin):

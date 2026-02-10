@@ -16,7 +16,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 from sqlalchemy.orm import DeclarativeBase
 from sqlmodel import SQLModel, Field
 
-from AetherPackBot.core.kernel.logging import get_logger
+from AetherPackBot.core.logging import get_logger
 
 logger = get_logger("database")
 T = TypeVar("T", bound=SQLModel)
@@ -109,7 +109,7 @@ class DatabaseManager:
         if db_url:
             self._db_url = db_url
         else:
-            from AetherPackBot.core.kernel.paths import get_db_url
+            from AetherPackBot.core.paths import get_db_url
             self._db_url = get_db_url()
         self._engine = None
         self._session_factory = None

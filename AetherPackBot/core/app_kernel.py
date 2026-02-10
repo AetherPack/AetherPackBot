@@ -16,9 +16,9 @@ import signal
 from pathlib import Path
 from typing import Any
 
-from AetherPackBot.core.kernel.container import ServiceContainer
-from AetherPackBot.core.kernel.lifecycle import LifecycleManager, LifecycleState
-from AetherPackBot.core.kernel.logging import LogManager, LogBroker, get_logger, setup_logging
+from AetherPackBot.core.container import ServiceContainer
+from AetherPackBot.core.lifecycle import LifecycleManager, LifecycleState
+from AetherPackBot.core.logging import LogManager, LogBroker, get_logger, setup_logging
 
 
 class ApplicationKernel:
@@ -111,7 +111,7 @@ class ApplicationKernel:
     
     async def _initialize_directories(self) -> None:
         """Create required data directories."""
-        from AetherPackBot.core.kernel.paths import ensure_directories
+        from AetherPackBot.core.paths import ensure_directories
         ensure_directories()
         self._logger.debug("Data directories initialized")
     

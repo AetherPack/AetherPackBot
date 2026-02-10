@@ -13,7 +13,7 @@ from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Any, TypeVar, Generic
 
-from AetherPackBot.core.kernel.logging import get_logger
+from AetherPackBot.core.logging import get_logger
 
 T = TypeVar("T")
 logger = get_logger("config")
@@ -169,7 +169,7 @@ class ConfigurationManager:
         if config_path:
             self._config_path = Path(config_path)
         else:
-            from AetherPackBot.core.kernel.paths import get_config_file
+            from AetherPackBot.core.paths import get_config_file
             self._config_path = get_config_file()
         self._config: dict[str, Any] = {}
         self._loaded = False

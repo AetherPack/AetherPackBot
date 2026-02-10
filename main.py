@@ -175,7 +175,7 @@ def display_banner() -> None:
 
 async def main() -> None:
     """应用主入口。"""
-    from AetherPackBot.core.kernel import ApplicationKernel
+    from AetherPackBot.core.app_kernel import ApplicationKernel
     from AetherPackBot.core.logging import LogManager
     
     args = parse_arguments()
