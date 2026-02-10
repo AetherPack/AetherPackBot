@@ -25,18 +25,17 @@ uv run main.py
 ## Architecture
 
 ```
-aetherpackbot/
-├── kernel/          # Core kernel (lifecycle, container, events)
-├── protocols/       # Abstract protocols and interfaces
-├── messaging/       # Message handling and processing
-├── platforms/       # Platform adapters (Telegram, Discord, etc.)
-├── providers/       # LLM provider implementations
-├── plugins/         # Plugin system
-├── agents/          # Agent system with tool calling
-├── storage/         # Database and persistence
-├── webapi/          # REST API and WebSocket server
-├── cli/             # Command-line interface
-└── extensions/      # Built-in extensions
+AETHERPACKBOT
+├───AetherPackBot（主框架，纯py文件）
+│   ├───cli（AetherPackBot CLI窗口）
+│   ├───core（框架核心）
+│   └───dashboard（对接webui）
+│   └───api（对接所有api）
+├───changelogs（更新版本log信息）
+├───dashboard（webui面板前端）
+├───data（默认不带，启动后自己创建并生成数据文件）
+└───packages（自带插件）
+    └───AetherPackBot（基础指令，功能）
 ```
 
 ## License
