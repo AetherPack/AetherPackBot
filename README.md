@@ -40,4 +40,4 @@ AETHERPACKBOT
 
 ## License
 
-MIT License
+用了Astr的代码，所以说是AGPL3
