@@ -186,7 +186,7 @@ async def main() -> None:
     log_manager = LogManager()
     logger = log_manager.GetLogger("main")
     
-    logger.info("Initializing AetherPackBot...")
+    logger.info("正在初始化 AetherPackBot...")
     
     try:
         # 创建并启动应用内核
@@ -197,20 +197,20 @@ async def main() -> None:
         )
         
         await kernel.boot()
-        logger.info("AetherPackBot started successfully.")
+        logger.info("AetherPackBot 已成功启动！")
         
         # 持续运行直到收到关闭信号
         await kernel.run_forever()
         
     except KeyboardInterrupt:
-        logger.info("Received shutdown signal...")
+        logger.info("收到关闭信号...")
     except Exception as e:
-        logger.exception(f"Fatal error: {e}")
+        logger.exception(f"致命错误: {e}")
         sys.exit(1)
     finally:
         if "kernel" in locals():
             await kernel.shutdown()
-        logger.info("AetherPackBot shutdown complete.")
+        logger.info("AetherPackBot 已成功关闭。")
 
 
 if __name__ == "__main__":
