@@ -1,3 +1,5 @@
-"""兼容包：暴露新的 AetherPackBot 目录命名空间。"""
+# AetherPackBot - 事件驱动微内核多平台聊天机器人框架
+# AetherPackBot - Event-driven microkernel multi-platform chatbot framework
 
-__all__ = ["cli", "core", "dashboard", "api"]
+__version__ = "1.0.0"
+__app_name__ = "AetherPackBot"

@@ -22,22 +22,6 @@ uv sync
 uv run main.py
 ```
 
-## Architecture
-
-```text
-AETHERPACKBOT
-├───AetherPackBot（主框架，纯py文件）
-│   ├───cli（AetherPackBot CLI窗口）
-│   ├───core（框架核心）
-│   └───dashboard（对接webui）
-│   └───api（对接所有api）
-├───changelogs（更新版本log信息）
-├───dashboard（webui面板前端）
-├───data（默认不带，启动后自己创建并生成数据文件）
-└───packages（自带插件）
-    └───AetherPackBot（基础指令，功能）
-```
-
 ## License
 
-用了Astr的代码，所以说是AGPL3
+AGPL-V3
