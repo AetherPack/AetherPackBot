@@ -27,7 +27,7 @@ class WebApplication:
         self,
         container: ServiceContainer,
         host: str = "0.0.0.0",
-        port: int = 6185,
+        port: int = 9000,
     ) -> None:
         self._container = container
         self._host = host

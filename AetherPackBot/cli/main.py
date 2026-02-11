@@ -21,7 +21,7 @@ def cli() -> None:
 
 @cli.command()
 @click.option("--host", default="0.0.0.0", help="Web 服务监听地址")
-@click.option("--port", default=6185, type=int, help="Web 服务端口")
+@click.option("--port", default=9000, type=int, help="Web 服务端口")
 @click.option("--data-dir", default="data", help="数据目录")
 def run(host: str, port: int, data_dir: str) -> None:
     """启动 AetherPackBot / Start AetherPackBot."""

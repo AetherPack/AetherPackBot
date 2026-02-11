@@ -20,7 +20,7 @@ def build_default_config() -> dict[str, Any]:
         # Web 服务配置
         "web": {
             "host": "0.0.0.0",
-            "port": 6185,
+            "port": 9000,
             "username": "admin",
             "password": "",
             "enable_cors": True,
