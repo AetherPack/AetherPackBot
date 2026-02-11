@@ -1,5 +1,5 @@
-from fastapi import FastAPI, Request
-from AetherPackBot.core.plugin.manager import PluginManager
+from fastapi import FastAPI, Request, HTTPException
+from AetherPackBot.core.plugin.manager import PluginManager, PluginError, PluginValidationError, PluginNotFoundError
 import logging
 
 rfc = FastAPI()
@@ -15,6 +15,12 @@ async def plugin_add_plugin(request: Request):
             "message": f"插件 {data.get('name')} 由 {data.get('author')} 注册成功"
         }
         return {"status": "success", "data": plugin_data_return}
+    except PluginValidationError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except PluginNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except PluginError as e:
+        raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
         logging.error(f"Error processing RFC request: {e}")
-        return {"status": "error", "message": str(e)}
+        raise HTTPException(status_code=500, detail="内部服务器错误")

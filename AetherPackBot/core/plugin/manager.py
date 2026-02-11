@@ -1,6 +1,17 @@
 ﻿from typing import Dict, List
-from fastapi import HTTPException
 import logging
+
+class PluginError(Exception):
+    """插件相关异常基类"""
+    pass
+
+class PluginValidationError(PluginError):
+    """插件验证错误"""
+    pass
+
+class PluginNotFoundError(PluginError):
+    """插件未找到错误"""
+    pass
 
 class PluginManager:
     """插件管理器"""
@@ -13,10 +24,7 @@ class PluginManager:
         try:
             # 验证必要字段
             if 'name' not in plugin_data or 'author' not in plugin_data:
-                raise HTTPException(
-                    status_code=400,
-                    detail="缺少必要的插件信息: name 和 author"
-                )
+                raise PluginValidationError("缺少必要的插件信息: name 和 author")
             
             plugin_name = plugin_data['name']
             self.plugins[plugin_name] = {
@@ -27,9 +35,11 @@ class PluginManager:
             logging.info(f"成功注册插件: {plugin_name} by {plugin_data['author']}")
             return True
             
+        except PluginError:
+            raise
         except Exception as e:
             logging.error(f"注册插件失败: {e}")
-            raise HTTPException(status_code=500, detail=str(e))
+            raise PluginError(f"内部错误: {str(e)}")
     
     def get_plugins(self) -> List[Dict]:
         """获取所有插件"""
@@ -47,5 +57,5 @@ class PluginManager:
         """获取单个插件"""
         plugin = self.plugins.get(name)
         if plugin is None:
-            raise HTTPException(status_code=404, detail=f"插件 {name} 未找到")
+            raise PluginNotFoundError(f"插件 {name} 未找到")
         return plugin
