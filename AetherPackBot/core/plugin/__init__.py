@@ -23,6 +23,6 @@ class Plugin(CommandParserMixin):
 __all__ = ["Plugin"]
 
 if __name__ == "__main__":
-    rfc.post = 9191
-    uvicorn.run(rfc, host="0.0.0.0", port=rfc.post)
-    logging.info("RFC插件接口在端口${}启动".format(rfc))
+    port = 9191
+    uvicorn.run(rfc, host="0.0.0.0", port=port)
+    logging.info(f"RFC插件接口在端口{port}启动")
