@@ -10,7 +10,7 @@ async def plugin_add_plugin(request: Request):
     """RFC-插件注册"""
     try:
         data = await request.json()
-        plugin_manager.add_plugin(data)
+        await plugin_manager.add_plugin(data)
         plugin_data_return = {
             "message": f"插件 {data.get('name')} 由 {data.get('author')} 注册成功"
         }
