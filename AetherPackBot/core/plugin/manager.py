@@ -21,6 +21,12 @@ class PluginNotFoundError(PluginError):
     pass
 
 
+class PluginAlreadyExistsError(PluginValidationError):
+    """插件重复注册错误"""
+
+    pass
+
+
 class PluginManager:
     """插件管理器"""
 
@@ -37,6 +43,9 @@ class PluginManager:
 
             plugin_name = plugin_data["name"]
             with self._plugins_lock:
+                if plugin_name in self.plugins:
+                    raise PluginAlreadyExistsError(f"插件 {plugin_name} 已存在，禁止重复注册")
+
                 self.plugins[plugin_name] = {
                     "name": plugin_name,
                     "author": plugin_data["author"],
