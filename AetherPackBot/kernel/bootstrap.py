@@ -171,7 +171,7 @@ class Bootstrap:
 
         config_mgr = await self.container.resolve_by_name("config")
         host = config_mgr.get("web.host", "0.0.0.0")
-        port = config_mgr.get("web.port", 6185)
+        port = config_mgr.get("web.port", 9000)
 
         web_app = WebApplication(self.container, host=host, port=port)
         self.container.register_instance(WebApplication, web_app, name="web_app")
